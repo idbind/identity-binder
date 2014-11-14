@@ -1,4 +1,4 @@
-package org.mitre.openid.binder.config;
+package org.mitre.openid.connect.binder.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
