@@ -5,9 +5,8 @@ import org.mitre.jwt.signer.service.impl.DefaultJwtSigningAndValidationService;
 import org.mitre.jwt.signer.service.impl.JWKSetCacheService;
 import org.mitre.oauth2.model.RegisteredClient;
 import org.mitre.oauth2.model.ClientDetailsEntity.AuthMethod;
-import org.mitre.openid.connect.client.NamedAdminAuthoritiesMapper;
+import org.mitre.openid.connect.binder.authentication.MultipleIdentityAuthenticationProvider;
 import org.mitre.openid.connect.client.OIDCAuthenticationFilter;
-import org.mitre.openid.connect.client.OIDCAuthenticationProvider;
 import org.mitre.openid.connect.client.OIDCFilterFactory;
 import org.mitre.openid.connect.client.keypublisher.ClientKeyPublisher;
 import org.mitre.openid.connect.client.service.impl.DynamicRegistrationClientConfigurationService;
@@ -70,13 +69,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	}
 	
 	@Bean
-	public OIDCAuthenticationProvider openIdConnectAuthenticationProvider() {
-		OIDCAuthenticationProvider authenticationProvider = new OIDCAuthenticationProvider();
-		
-		NamedAdminAuthoritiesMapper authoritiesMapper = new NamedAdminAuthoritiesMapper();
-		// TODO setup named admins
-		
-		authenticationProvider.setAuthoritiesMapper(authoritiesMapper);
+	public MultipleIdentityAuthenticationProvider openIdConnectAuthenticationProvider() {
+		MultipleIdentityAuthenticationProvider authenticationProvider = new MultipleIdentityAuthenticationProvider();
+
+		// TODO do authorities mapping
 		
 		return authenticationProvider;
 	}
