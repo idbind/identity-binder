@@ -2,15 +2,27 @@ package org.mitre.openid.connect.binder.model;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
 /**
  * Model class for representing a user with one or more OpenID Connect identities.
  * 
  * @author wkim
  *
  */
+@Entity
 public class MultipleIdentity {
 	
+	@Id
+	@GeneratedValue
 	private long id;
+	
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Identity> identities;
 	
 	/**
