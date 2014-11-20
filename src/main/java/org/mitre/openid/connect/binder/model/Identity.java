@@ -1,42 +1,37 @@
 package org.mitre.openid.connect.binder.model;
 
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+
 /**
  * Model class for an OpenID Connect identity.
  * 
  * @author wkim
  *
  */
+@Entity
 public class Identity {
 	
-	private String issuer;
-	private String subject;
+	@EmbeddedId
+	private SubjectIssuer subjectIssuer;
 	
-	// raw JSON string to facilitate compatibility with differing user info claims sets
+	// implemented as a raw JSON string to facilitate compatibility with differing user info claims sets
+	@Column(name = "user_info_json_string")
 	private String userInfoJsonString;
+
 	
 	/**
-	 * @return the issuer
+	 * @return the subjectIssuer
 	 */
-	public String getIssuer() {
-		return issuer;
+	public SubjectIssuer getSubjectIssuer() {
+		return subjectIssuer;
 	}
 	/**
-	 * @param issuer the issuer to set
+	 * @param subjectIssuer the subjectIssuer to set
 	 */
-	public void setIssuer(String issuer) {
-		this.issuer = issuer;
-	}
-	/**
-	 * @return the subject
-	 */
-	public String getSubject() {
-		return subject;
-	}
-	/**
-	 * @param subject the subject to set
-	 */
-	public void setSubject(String subject) {
-		this.subject = subject;
+	public void setSubjectIssuer(SubjectIssuer subjectIssuer) {
+		this.subjectIssuer = subjectIssuer;
 	}
 	/**
 	 * @return the userInfoJsonString
@@ -50,7 +45,6 @@ public class Identity {
 	public void setUserInfoJsonString(String userInfoJsonString) {
 		this.userInfoJsonString = userInfoJsonString;
 	}
-	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -58,12 +52,10 @@ public class Identity {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((issuer == null) ? 0 : issuer.hashCode());
-		result = prime * result + ((subject == null) ? 0 : subject.hashCode());
+		result = prime * result + ((subjectIssuer == null) ? 0 : subjectIssuer.hashCode());
 		result = prime * result + ((userInfoJsonString == null) ? 0 : userInfoJsonString.hashCode());
 		return result;
 	}
-	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -76,15 +68,10 @@ public class Identity {
 		if (getClass() != obj.getClass())
 			return false;
 		Identity other = (Identity) obj;
-		if (issuer == null) {
-			if (other.issuer != null)
+		if (subjectIssuer == null) {
+			if (other.subjectIssuer != null)
 				return false;
-		} else if (!issuer.equals(other.issuer))
-			return false;
-		if (subject == null) {
-			if (other.subject != null)
-				return false;
-		} else if (!subject.equals(other.subject))
+		} else if (!subjectIssuer.equals(other.subjectIssuer))
 			return false;
 		if (userInfoJsonString == null) {
 			if (other.userInfoJsonString != null)
@@ -93,8 +80,6 @@ public class Identity {
 			return false;
 		return true;
 	}
-
-	
-	
 	
 }
+
