@@ -12,6 +12,7 @@ import org.mitre.openid.connect.client.keypublisher.ClientKeyPublisher;
 import org.mitre.openid.connect.client.service.impl.DynamicRegistrationClientConfigurationService;
 import org.mitre.openid.connect.client.service.impl.DynamicServerConfigurationService;
 import org.mitre.openid.connect.client.service.impl.HybridIssuerService;
+import org.mitre.openid.connect.client.service.impl.JsonFileRegisteredClientService;
 import org.mitre.openid.connect.client.service.impl.PlainAuthRequestUrlBuilder;
 import org.mitre.openid.connect.client.service.impl.StaticAuthRequestOptionsService;
 import org.springframework.context.annotation.Bean;
@@ -102,6 +103,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		client.setJwksUri("http://localhost:8007/jwk");
 		
 		clientConfigurationService.setTemplate(client);
+		
+		/*
+		 * Registered Client Service. Uncomment this to save dynamically registered clients out to a 
+		 * file on disk (indicated by the filename property) or replace this with another implementation 
+		 * of RegisteredClientService. This defaults to an in-memory implementation of RegisteredClientService 
+		 * which will forget and re-register all clients on restart.
+		 */
+		// clientConfigurationService.setRegisteredClientService(new JsonFileRegisteredClientService("/tmp/simple-web-app-clients.json"));
 		
 		return clientConfigurationService;
 	}
