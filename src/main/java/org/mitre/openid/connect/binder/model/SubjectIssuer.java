@@ -14,10 +14,8 @@ public class SubjectIssuer implements Serializable {
 	 */
 	private static final long serialVersionUID = -5196694871000667262L;
 	
-	@Column(name = "subject", nullable = false)
 	private String subject;
 	
-	@Column(name = "issuer", nullable = false)
 	private String issuer;
 
 	
@@ -33,6 +31,7 @@ public class SubjectIssuer implements Serializable {
 	/**
 	 * @return the subject
 	 */
+	@Column(name = "subject", nullable = false)
 	public String getSubject() {
 		return subject;
 	}
@@ -47,6 +46,7 @@ public class SubjectIssuer implements Serializable {
 	/**
 	 * @return the issuer
 	 */
+	@Column(name = "issuer", nullable = false)
 	public String getIssuer() {
 		return issuer;
 	}

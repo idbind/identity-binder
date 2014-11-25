@@ -3,6 +3,7 @@ package org.mitre.openid.connect.binder.model;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * Model class for an OpenID Connect identity.
@@ -11,19 +12,19 @@ import javax.persistence.Entity;
  *
  */
 @Entity
+@Table(name = "identity")
 public class Identity {
 	
-	@EmbeddedId
 	private SubjectIssuer subjectIssuer;
 	
 	// implemented as a raw JSON string to facilitate compatibility with differing user info claims sets
-	@Column(name = "user_info_json_string")
 	private String userInfoJsonString;
 
 	
 	/**
 	 * @return the subjectIssuer
 	 */
+	@EmbeddedId
 	public SubjectIssuer getSubjectIssuer() {
 		return subjectIssuer;
 	}
@@ -36,6 +37,7 @@ public class Identity {
 	/**
 	 * @return the userInfoJsonString
 	 */
+	@Column(name = "user_info_json_string")
 	public String getUserInfoJsonString() {
 		return userInfoJsonString;
 	}
