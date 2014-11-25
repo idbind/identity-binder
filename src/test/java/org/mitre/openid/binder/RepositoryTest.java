@@ -69,6 +69,10 @@ public class RepositoryTest {
 		
 		MultipleIdentity multi = new MultipleIdentity();
 		multi.setId(1L);
+		
+		identity1.setMultipleIdentity(multi);
+		identity2.setMultipleIdentity(multi);
+		
 		multi.setIdentities(Sets.newHashSet(identity1, identity2));
 		
 		multipleIdentityRepository.save(multi);
