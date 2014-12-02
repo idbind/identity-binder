@@ -29,4 +29,18 @@ public interface IdentityService {
 	 */
 	public MultipleIdentity getMultipleBySubjectIssuer(String subject, String issuer);
 	
+	/**
+	 * 
+	 * @param singleIdentity
+	 * @return
+	 */
+	public SingleIdentity saveSingleIdentity(SingleIdentity singleIdentity);
+	
+	/**
+	 * 
+	 * @param multipleIdentity
+	 * @return
+	 */
+	public MultipleIdentity saveMultipleIdentity(MultipleIdentity multipleIdentity);
+	
 }

@@ -2,7 +2,11 @@ package org.mitre.openid.connect.binder.authentication;
 
 import java.util.Set;
 
+import org.mitre.openid.connect.binder.model.SingleIdentity;
+import org.mitre.openid.connect.binder.model.SubjectIssuer;
+import org.mitre.openid.connect.binder.service.IdentityService;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -13,6 +17,9 @@ import com.google.common.collect.Sets;
 
 public class MultipleIdentityAuthenticationProvider implements AuthenticationProvider {
 
+	@Autowired
+	private IdentityService identityService;
+	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
@@ -30,10 +37,15 @@ public class MultipleIdentityAuthenticationProvider implements AuthenticationPro
 		} else if (authentication instanceof OIDCAuthenticationToken) {
 
 			OIDCAuthenticationToken newToken = (OIDCAuthenticationToken) authentication;
-
-			Authentication preexistingAuthentication = SecurityContextHolder.getContext().getAuthentication();
+			
+			// save identity information
+			SingleIdentity singleIdentity = new SingleIdentity();
+			singleIdentity.setSubjectIssuer(new SubjectIssuer(newToken.getSub(), newToken.getIssuer()));
+			singleIdentity.setUserInfoJsonString( (newToken.getUserInfo() == null) ? null : newToken.getUserInfo().toJson().getAsString() );
+			identityService.saveSingleIdentity(singleIdentity);
 
 			// check for existing multi-authentication context
+			Authentication preexistingAuthentication = SecurityContextHolder.getContext().getAuthentication();
 			if (preexistingAuthentication instanceof MultipleIdentityAuthentication) {
 
 				// add on to existing authentication object

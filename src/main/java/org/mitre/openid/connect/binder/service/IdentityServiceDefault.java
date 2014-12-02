@@ -55,4 +55,15 @@ public class IdentityServiceDefault implements IdentityService {
 	}
 	
 
+	@Override
+	public SingleIdentity saveSingleIdentity(SingleIdentity singleIdentity) {
+		return singleIdentityRepository.save(singleIdentity);
+	}
+
+	@Override
+	public MultipleIdentity saveMultipleIdentity(MultipleIdentity multipleIdentity) {
+		return multipleIdentityRepository.save(multipleIdentity);
+	}
+
+
 }
