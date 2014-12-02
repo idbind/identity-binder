@@ -24,7 +24,7 @@ public class MultipleIdentity {
 	
 	private Long id;
 	
-	private Set<Identity> identities;
+	private Set<SingleIdentity> identities;
 	
 	/**
 	 * @return the id
@@ -45,13 +45,13 @@ public class MultipleIdentity {
 	 * @return the identities
 	 */
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "multipleIdentity")
-	public Set<Identity> getIdentities() {
+	public Set<SingleIdentity> getIdentities() {
 		return identities;
 	}
 	/**
 	 * @param identities the identities to set
 	 */
-	public void setIdentities(Set<Identity> identities) {
+	public void setIdentities(Set<SingleIdentity> identities) {
 		this.identities = identities;
 	}
 	/* (non-Javadoc)

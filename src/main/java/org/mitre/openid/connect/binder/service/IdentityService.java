@@ -1,6 +1,6 @@
 package org.mitre.openid.connect.binder.service;
 
-import org.mitre.openid.connect.binder.model.Identity;
+import org.mitre.openid.connect.binder.model.SingleIdentity;
 import org.mitre.openid.connect.binder.model.MultipleIdentity;
 
 /**
@@ -17,7 +17,7 @@ public interface IdentityService {
 	 * @param issuer
 	 * @return
 	 */
-	public Identity getSingleBySubjectIssuer(String subject, String issuer);
+	public SingleIdentity getSingleBySubjectIssuer(String subject, String issuer);
 	
 	/**
 	 * Returns the multiple identity object that contains the identity associated with
@@ -28,6 +28,5 @@ public interface IdentityService {
 	 * @return
 	 */
 	public MultipleIdentity getMultipleBySubjectIssuer(String subject, String issuer);
-	
 	
 }

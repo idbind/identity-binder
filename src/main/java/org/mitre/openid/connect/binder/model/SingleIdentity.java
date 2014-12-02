@@ -15,7 +15,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "identity")
-public class Identity {
+public class SingleIdentity {
 	
 	private SubjectIssuer subjectIssuer;
 	
@@ -59,7 +59,7 @@ public class Identity {
 	 * @return the multipleIdentity
 	 */
 	@ManyToOne
-	@JoinColumn(name = "id")
+	@JoinColumn(name = "multipleIdentityId", referencedColumnName = "id")
 	public MultipleIdentity getMultipleIdentity() {
 		return multipleIdentity;
 	}
@@ -94,7 +94,7 @@ public class Identity {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Identity other = (Identity) obj;
+		SingleIdentity other = (SingleIdentity) obj;
 		if (subjectIssuer == null) {
 			if (other.subjectIssuer != null)
 				return false;
