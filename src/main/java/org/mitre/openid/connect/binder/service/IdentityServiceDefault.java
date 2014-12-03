@@ -35,7 +35,7 @@ public class IdentityServiceDefault implements IdentityService {
 	
 
 	@Override
-	public MultipleIdentity bind(MultipleIdentity multipleIdentity, SingleIdentity... singleIdentities) {
+	public MultipleIdentity bind(MultipleIdentity multipleIdentity, Set<SingleIdentity> singleIdentities) {
 		
 		if (multipleIdentity == null) {
 			multipleIdentity = new MultipleIdentity();
@@ -56,7 +56,7 @@ public class IdentityServiceDefault implements IdentityService {
 	
 
 	@Override
-	public MultipleIdentity bindBySubjectIssuer(MultipleIdentity multipleIdentity, SubjectIssuer... subjectIssuerPairs) {
+	public MultipleIdentity bindBySubjectIssuer(MultipleIdentity multipleIdentity, Set<SubjectIssuer> subjectIssuerPairs) {
 		
 		Set<SingleIdentity> singleIdentities = new HashSet<SingleIdentity>();
 		
@@ -65,20 +65,17 @@ public class IdentityServiceDefault implements IdentityService {
 			// assumes it exists already, or else will just pass null and will be skipped in the bind() function
 		}
 		
-		return bind(multipleIdentity, singleIdentities.toArray(new SingleIdentity[singleIdentities.size()]));
+		return bind(multipleIdentity, singleIdentities);
 	}
 	
 	@Override
-	public MultipleIdentity unbind(MultipleIdentity multipleIdentity, SingleIdentity... singleIdentities) {
+	public MultipleIdentity unbind(MultipleIdentity multipleIdentity, Set<SingleIdentity> singleIdentities) {
 		if (multipleIdentity == null || multipleIdentity.getIdentities() == null || multipleIdentity.getIdentities().isEmpty()) {
 			return multipleIdentity;
 		}
 		
 		Set<SingleIdentity> identities = multipleIdentity.getIdentities();
-		for (SingleIdentity singleIdentity : singleIdentities) {
-			identities.remove(singleIdentity);
-		}
-		
+		identities.removeAll(singleIdentities);
 		multipleIdentity.setIdentities(identities);
 		
 		return multipleIdentityRepository.save(multipleIdentity);
@@ -86,14 +83,14 @@ public class IdentityServiceDefault implements IdentityService {
 	
 
 	@Override
-	public MultipleIdentity unbind(MultipleIdentity multipleIdentity, SubjectIssuer... subjectIssuerPairs) {
+	public MultipleIdentity unbindBySubjectIssuer(MultipleIdentity multipleIdentity, Set<SubjectIssuer> subjectIssuerPairs) {
 		Set<SingleIdentity> singleIdentities = new HashSet<SingleIdentity>();
 		
 		for (SubjectIssuer subjectIssuer : subjectIssuerPairs) {
 			singleIdentities.add(singleIdentityRepository.findOne(subjectIssuer)); 
 		}
 		
-		return unbind(multipleIdentity, singleIdentities.toArray(new SingleIdentity[singleIdentities.size()]));
+		return unbind(multipleIdentity, singleIdentities);
 	}
 	
 	@Override

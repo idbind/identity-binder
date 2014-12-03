@@ -1,5 +1,7 @@
 package org.mitre.openid.connect.binder.service;
 
+import java.util.Set;
+
 import org.mitre.openid.connect.binder.model.SingleIdentity;
 import org.mitre.openid.connect.binder.model.MultipleIdentity;
 import org.mitre.openid.connect.binder.model.SubjectIssuer;
@@ -20,7 +22,7 @@ public interface IdentityService {
 	 * @param singleIdentities the single identities to bind.
 	 * @return
 	 */
-	public MultipleIdentity bind(MultipleIdentity multipleIdentity, SingleIdentity... singleIdentities);
+	public MultipleIdentity bind(MultipleIdentity multipleIdentity, Set<SingleIdentity> singleIdentities);
 	
 	/**
 	 * Binds the single identities associated with the given subject/issuer pairs to the given multiple identity object.
@@ -32,7 +34,7 @@ public interface IdentityService {
 	 * @param subjectIssuerPairs the subject/issuer pairs to bind.
 	 * @return
 	 */
-	public MultipleIdentity bindBySubjectIssuer(MultipleIdentity multipleIdentity, SubjectIssuer... subjectIssuerPairs);
+	public MultipleIdentity bindBySubjectIssuer(MultipleIdentity multipleIdentity, Set<SubjectIssuer> subjectIssuerPairs);
 	
 	/**
 	 * Unbinds the given single identities from the given multiple identity object. Does nothing if the multiple
@@ -42,7 +44,7 @@ public interface IdentityService {
 	 * @param singleIdentities
 	 * @return
 	 */
-	public MultipleIdentity unbind(MultipleIdentity multipleIdentity, SingleIdentity... singleIdentities);
+	public MultipleIdentity unbind(MultipleIdentity multipleIdentity, Set<SingleIdentity> singleIdentities);
 	
 	/**
 	 * Unbinds the single identities associated with the given subject/issuer pairs from the given multiple identity object. 
@@ -52,7 +54,7 @@ public interface IdentityService {
 	 * @param subjectIssuerPairs
 	 * @return
 	 */
-	public MultipleIdentity unbind(MultipleIdentity multipleIdentity, SubjectIssuer... subjectIssuerPairs);
+	public MultipleIdentity unbindBySubjectIssuer(MultipleIdentity multipleIdentity, Set<SubjectIssuer> subjectIssuerPairs);
 	
 	/**
 	 * Returns the singular identity object associated with the given subject and issuer.
