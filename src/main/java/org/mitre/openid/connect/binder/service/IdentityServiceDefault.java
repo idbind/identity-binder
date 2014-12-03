@@ -54,6 +54,20 @@ public class IdentityServiceDefault implements IdentityService {
 		return multipleIdentityRepository.save(multipleIdentity);
 	}
 	
+
+	@Override
+	public MultipleIdentity bindBySubjectIssuer(MultipleIdentity multipleIdentity, SubjectIssuer... subjectIssuerPairs) {
+		
+		Set<SingleIdentity> singleIdentities = new HashSet<SingleIdentity>();
+		
+		for (SubjectIssuer subjectIssuer : subjectIssuerPairs) {
+			singleIdentities.add(singleIdentityRepository.findOne(subjectIssuer)); 
+			// assumes it exists already, or else will just pass null and will be skipped in the bind() function
+		}
+		
+		return bind(multipleIdentity, singleIdentities.toArray(new SingleIdentity[singleIdentities.size()]));
+	}
+	
 	@Override
 	public MultipleIdentity unbind(MultipleIdentity multipleIdentity, SingleIdentity... singleIdentities) {
 		if (multipleIdentity == null || multipleIdentity.getIdentities() == null || multipleIdentity.getIdentities().isEmpty()) {
@@ -68,6 +82,18 @@ public class IdentityServiceDefault implements IdentityService {
 		multipleIdentity.setIdentities(identities);
 		
 		return multipleIdentityRepository.save(multipleIdentity);
+	}
+	
+
+	@Override
+	public MultipleIdentity unbind(MultipleIdentity multipleIdentity, SubjectIssuer... subjectIssuerPairs) {
+		Set<SingleIdentity> singleIdentities = new HashSet<SingleIdentity>();
+		
+		for (SubjectIssuer subjectIssuer : subjectIssuerPairs) {
+			singleIdentities.add(singleIdentityRepository.findOne(subjectIssuer)); 
+		}
+		
+		return unbind(multipleIdentity, singleIdentities.toArray(new SingleIdentity[singleIdentities.size()]));
 	}
 	
 	@Override
@@ -121,6 +147,5 @@ public class IdentityServiceDefault implements IdentityService {
 	public MultipleIdentity saveMultipleIdentity(MultipleIdentity multipleIdentity) {
 		return multipleIdentityRepository.save(multipleIdentity);
 	}
-
 
 }

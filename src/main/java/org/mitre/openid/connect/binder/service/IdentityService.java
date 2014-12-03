@@ -2,6 +2,7 @@ package org.mitre.openid.connect.binder.service;
 
 import org.mitre.openid.connect.binder.model.SingleIdentity;
 import org.mitre.openid.connect.binder.model.MultipleIdentity;
+import org.mitre.openid.connect.binder.model.SubjectIssuer;
 
 /**
  * 
@@ -22,6 +23,18 @@ public interface IdentityService {
 	public MultipleIdentity bind(MultipleIdentity multipleIdentity, SingleIdentity... singleIdentities);
 	
 	/**
+	 * Binds the single identities associated with the given subject/issuer pairs to the given multiple identity object.
+	 * If the multiple identity argument is null, this will create a new multiple identity object.
+	 * 
+	 * This method assumes that this subject/issuer is known to this service already.
+	 * 
+	 * @param multipleIdentity the multiple identity object to bind to.
+	 * @param subjectIssuerPairs the subject/issuer pairs to bind.
+	 * @return
+	 */
+	public MultipleIdentity bindBySubjectIssuer(MultipleIdentity multipleIdentity, SubjectIssuer... subjectIssuerPairs);
+	
+	/**
 	 * Unbinds the given single identities from the given multiple identity object. Does nothing if the multiple
 	 * identity object is null, or if the single identity is not found in it.
 	 * 
@@ -30,6 +43,16 @@ public interface IdentityService {
 	 * @return
 	 */
 	public MultipleIdentity unbind(MultipleIdentity multipleIdentity, SingleIdentity... singleIdentities);
+	
+	/**
+	 * Unbinds the single identities associated with the given subject/issuer pairs from the given multiple identity object. 
+	 * Does nothing if the multiple identity object is null, or if the single identity is not found in it.
+	 * 
+	 * @param multipleIdentity
+	 * @param subjectIssuerPairs
+	 * @return
+	 */
+	public MultipleIdentity unbind(MultipleIdentity multipleIdentity, SubjectIssuer... subjectIssuerPairs);
 	
 	/**
 	 * Returns the singular identity object associated with the given subject and issuer.
