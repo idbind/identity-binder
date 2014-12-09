@@ -98,9 +98,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		client.setClientName("Identity Binder Service");
 		client.setScope(Sets.newHashSet("openid", "email", "address", "profile", "phone"));
 		client.setTokenEndpointAuthMethod(AuthMethod.SECRET_BASIC);
-		client.setRedirectUris(Sets.newHashSet("http://localhost:8007/openid_connect_login"));
+		client.setRedirectUris(Sets.newHashSet("http://localhost:8080/identity-binder/openid_connect_login"));
 		client.setRequestObjectSigningAlg(JWSAlgorithm.RS256);
-		client.setJwksUri("http://localhost:8007/jwk");
+		client.setJwksUri("http://localhost:8080/identity-binder/jwk");
 		
 		clientConfigurationService.setTemplate(client);
 		
