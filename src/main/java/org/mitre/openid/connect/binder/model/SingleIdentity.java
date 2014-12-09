@@ -1,5 +1,7 @@
 package org.mitre.openid.connect.binder.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -24,6 +26,10 @@ public class SingleIdentity {
 
 	// the multiple identity object this is a part of
 	private MultipleIdentity multipleIdentity;
+	
+	private Date firstUsed;
+	
+	private Date lastUsed;
 	
 	/**
 	 * @return the subjectIssuer
@@ -69,6 +75,36 @@ public class SingleIdentity {
 	 */
 	public void setMultipleIdentity(MultipleIdentity multipleIdentity) {
 		this.multipleIdentity = multipleIdentity;
+	}
+
+	/**
+	 * @return the firstUsed
+	 */
+	@Column(name = "first_used")
+	public Date getFirstUsed() {
+		return firstUsed;
+	}
+
+	/**
+	 * @param firstUsed the firstUsed to set
+	 */
+	public void setFirstUsed(Date firstUsed) {
+		this.firstUsed = firstUsed;
+	}
+
+	/**
+	 * @return the lastUsed
+	 */
+	@Column(name = "last_used")
+	public Date getLastUsed() {
+		return lastUsed;
+	}
+
+	/**
+	 * @param lastUsed the lastUsed to set
+	 */
+	public void setLastUsed(Date lastUsed) {
+		this.lastUsed = lastUsed;
 	}
 
 	/* (non-Javadoc)

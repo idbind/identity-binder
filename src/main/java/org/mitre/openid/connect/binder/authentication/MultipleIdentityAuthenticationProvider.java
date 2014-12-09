@@ -1,5 +1,6 @@
 package org.mitre.openid.connect.binder.authentication;
 
+import java.util.Date;
 import java.util.Set;
 
 import org.mitre.openid.connect.binder.model.SingleIdentity;
@@ -39,9 +40,15 @@ public class MultipleIdentityAuthenticationProvider implements AuthenticationPro
 			OIDCAuthenticationToken newToken = (OIDCAuthenticationToken) authentication;
 			
 			// save identity information
-			SingleIdentity singleIdentity = new SingleIdentity();
-			singleIdentity.setSubjectIssuer(new SubjectIssuer(newToken.getSub(), newToken.getIssuer()));
-			singleIdentity.setUserInfoJsonString( (newToken.getUserInfo() == null) ? null : newToken.getUserInfo().toJson().getAsString() );
+			SingleIdentity singleIdentity = identityService.getSingleBySubjectIssuer(newToken.getSub(), newToken.getIssuer());
+			if (singleIdentity == null) {
+				singleIdentity = new SingleIdentity();
+				singleIdentity.setSubjectIssuer(new SubjectIssuer(newToken.getSub(), newToken.getIssuer()));
+				singleIdentity.setFirstUsed(new Date());
+			}
+			
+			singleIdentity.setUserInfoJsonString( (newToken.getUserInfo() == null) ? null : newToken.getUserInfo().toJson().getAsString() ); // update user info every time
+			singleIdentity.setLastUsed(new Date());
 			identityService.saveSingleIdentity(singleIdentity);
 
 			// check for existing multi-authentication context
