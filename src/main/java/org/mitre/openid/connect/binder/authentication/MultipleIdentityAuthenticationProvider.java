@@ -54,7 +54,8 @@ public class MultipleIdentityAuthenticationProvider implements AuthenticationPro
 			// check for existing multi-authentication context
 			Authentication preexistingAuthentication = SecurityContextHolder.getContext().getAuthentication();
 			if (preexistingAuthentication instanceof MultipleIdentityAuthentication) {
-
+				
+				// XXX NEED TO DO CHECK FOR BOUND IDENTITY SET CONSISTENCY
 				// add on to existing authentication object
 				MultipleIdentityAuthentication oldAuthentication = (MultipleIdentityAuthentication) preexistingAuthentication;
 
@@ -66,7 +67,8 @@ public class MultipleIdentityAuthenticationProvider implements AuthenticationPro
 				Set<GrantedAuthority> authorities = Sets.newHashSet(oldAuthentication.getAuthorities());
 				authorities.addAll(newToken.getAuthorities());
 
-				return new MultipleIdentityAuthentication(authorities, tokens);
+
+				return new MultipleIdentityAuthentication(authorities, tokens, newToken, null);
 
 			} else { // make a new multi-auth object with this OIDC token
 				

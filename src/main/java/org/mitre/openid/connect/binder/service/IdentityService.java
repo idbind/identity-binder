@@ -10,6 +10,13 @@ import org.mitre.openid.connect.binder.model.MultipleIdentity;
  */
 public interface IdentityService {
 	
+	/**
+	 * Merges separate sets of identities into a single new set of identities.
+	 * Identities are based on the set of id tokens inside the security context authentication.
+	 * 
+	 * @return
+	 */
+	public MultipleIdentity merge();
 
 	/**
 	 * Binds the given single identity to the given multiple identity object. If the multiple identity

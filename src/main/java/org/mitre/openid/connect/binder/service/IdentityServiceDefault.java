@@ -34,6 +34,31 @@ public class IdentityServiceDefault implements IdentityService {
 	private MultipleIdentityRepository multipleIdentityRepository;
 
 	@Override
+	public MultipleIdentity merge() {
+		MultipleIdentityAuthentication authentication = (MultipleIdentityAuthentication) SecurityContextHolder.getContext().getAuthentication();
+		
+		OIDCAuthenticationToken boundToken = authentication.getCurrentToken(); // should be guaranteed to be one of the bound tokens
+		MultipleIdentity firstMultiple = getMultipleBySubjectIssuer(boundToken.getSub(), boundToken.getIssuer());
+		
+		OIDCAuthenticationToken unboundToken = authentication.getUnboundToken();
+		MultipleIdentity unmergedMultiple = getMultipleBySubjectIssuer(unboundToken.getSub(), unboundToken.getIssuer());
+		
+		if (unmergedMultiple == null) { // not part of another multiple, go ahead and merge it in
+			
+			return bindBySubjectIssuer(firstMultiple, unboundToken.getSub(), unboundToken.getIssuer());
+			
+		} else { // merge all the identities from unmerged multiple into the first multiple
+			
+			Set<SingleIdentity> mergedIdentities = firstMultiple.getIdentities();
+			mergedIdentities.addAll(unmergedMultiple.getIdentities());
+			firstMultiple.setIdentities(mergedIdentities);
+			multipleIdentityRepository.delete(unmergedMultiple);
+			return firstMultiple;
+		}
+		
+	}
+	
+	@Override
 	public MultipleIdentity bind(MultipleIdentity multipleIdentity, SingleIdentity singleIdentity) {
 
 		if (multipleIdentity == null) {
