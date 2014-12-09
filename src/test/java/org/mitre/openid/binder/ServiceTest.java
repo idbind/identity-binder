@@ -102,7 +102,7 @@ public class ServiceTest {
 		
 		assertThat(multi1.getIdentities(), not(hasItem(identity3)));
 		
-		service.bindBySubjectIssuer(multi1, Sets.newHashSet(new SubjectIssuer("bind me", "www.bindme.com")));
+		service.bindBySubjectIssuer(multi1, "bind me", "www.bindme.com");
 		
 		assertThat(multi1.getIdentities(), hasItems(identity1, identity2, identity3));
 
@@ -113,7 +113,7 @@ public class ServiceTest {
 		
 		assertThat(multi1.getIdentities(), hasItems(identity1, identity2));
 		
-		service.unbindBySubjectIssuer(multi1, Sets.newHashSet(new SubjectIssuer("user1", "www.example.com")));
+		service.unbindBySubjectIssuer(multi1, "user1", "www.example.com");
 		
 		assertThat(multi1.getIdentities(), not(hasItem(identity1)));
 	}
