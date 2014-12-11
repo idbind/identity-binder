@@ -9,7 +9,6 @@ import java.util.Set;
 import org.mitre.openid.connect.binder.authentication.MultipleIdentityAuthentication;
 import org.mitre.openid.connect.binder.model.SingleIdentity;
 import org.mitre.openid.connect.binder.model.MultipleIdentity;
-import org.mitre.openid.connect.binder.model.SubjectIssuer;
 import org.mitre.openid.connect.binder.repository.SingleIdentityRepository;
 import org.mitre.openid.connect.binder.repository.MultipleIdentityRepository;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
@@ -53,7 +52,7 @@ public class IdentityServiceDefault implements IdentityService {
 			mergedIdentities.addAll(unmergedMultiple.getIdentities());
 			firstMultiple.setIdentities(mergedIdentities);
 			multipleIdentityRepository.delete(unmergedMultiple);
-			return firstMultiple;
+			return multipleIdentityRepository.save(firstMultiple);
 		}
 		
 	}
@@ -105,7 +104,7 @@ public class IdentityServiceDefault implements IdentityService {
 
 	@Override
 	public SingleIdentity getSingleBySubjectIssuer(String subject, String issuer) {
-		return singleIdentityRepository.findOne(new SubjectIssuer(subject, issuer));
+		return singleIdentityRepository.findSingleIdentityBySubjectAndIssuer(subject, issuer);
 	}
 
 	@Override

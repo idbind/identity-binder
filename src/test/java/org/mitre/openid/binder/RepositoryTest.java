@@ -9,12 +9,12 @@ import org.junit.runner.RunWith;
 import org.mitre.openid.connect.binder.BinderApplication;
 import org.mitre.openid.connect.binder.model.SingleIdentity;
 import org.mitre.openid.connect.binder.model.MultipleIdentity;
-import org.mitre.openid.connect.binder.model.SubjectIssuer;
 import org.mitre.openid.connect.binder.repository.SingleIdentityRepository;
 import org.mitre.openid.connect.binder.repository.MultipleIdentityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.google.common.collect.Sets;
 
@@ -26,6 +26,7 @@ import com.google.common.collect.Sets;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = BinderApplication.class)
+@WebAppConfiguration
 public class RepositoryTest {
 
 	@Autowired
@@ -42,37 +43,41 @@ public class RepositoryTest {
 	
 	@Test
 	public void testSingleIdentityRoundTripSuccess() {
-		SubjectIssuer subjectIssuer = new SubjectIssuer("user", "www.example.com");
 		SingleIdentity identity = new SingleIdentity();
-		identity.setSubjectIssuer(subjectIssuer);
+		identity.setSubject("user");
+		identity.setIssuer("www.example.com");
 		
 		singleIdentityRepository.save(identity);
 		
-		assertThat(singleIdentityRepository.findOne(subjectIssuer), equalTo(identity));
+		assertThat(singleIdentityRepository.findSingleIdentityBySubjectAndIssuer("user", "www.example.com"), equalTo(identity));
 	}
 	
 	@Test
 	public void testSingleIdentityRoundTripFailure() {
-		SubjectIssuer subjectIssuer = new SubjectIssuer("user", "www.example.com");
 		SingleIdentity identity = new SingleIdentity();
-		identity.setSubjectIssuer(subjectIssuer);
+		identity.setSubject("user");
+		identity.setIssuer("www.example.com");
 		
 		singleIdentityRepository.save(identity);
 		
 		identity.setUserInfoJsonString("{}");
 		
-		assertThat(singleIdentityRepository.findOne(subjectIssuer), not(equalTo(identity)));
+		assertThat(singleIdentityRepository.findSingleIdentityBySubjectAndIssuer("user", "www.example.com"), not(equalTo(identity)));
 	}
 
 	@Test
 	public void testMultipleIdentityRoundTripSuccess() {
-		SubjectIssuer subjectIssuer1 = new SubjectIssuer("user1", "www.example.com");
 		SingleIdentity identity1 = new SingleIdentity();
-		identity1.setSubjectIssuer(subjectIssuer1);
+		identity1.setId(1L);
+		identity1.setSubject("user1");
+		identity1.setIssuer("www.example.com");
 		
-		SubjectIssuer subjectIssuer2 = new SubjectIssuer("user2", "www.example.com");
+		singleIdentityRepository.save(identity1);
+		
 		SingleIdentity identity2 = new SingleIdentity();
-		identity2.setSubjectIssuer(subjectIssuer2);
+		identity2.setId(2L);
+		identity2.setSubject("user2");
+		identity2.setIssuer("www.example.com");
 		
 		MultipleIdentity multi = new MultipleIdentity();
 		multi.setId(1L);

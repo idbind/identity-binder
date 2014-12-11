@@ -9,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.mitre.openid.connect.binder.BinderApplication;
 import org.mitre.openid.connect.binder.model.MultipleIdentity;
 import org.mitre.openid.connect.binder.model.SingleIdentity;
-import org.mitre.openid.connect.binder.model.SubjectIssuer;
 import org.mitre.openid.connect.binder.repository.MultipleIdentityRepository;
 import org.mitre.openid.connect.binder.repository.SingleIdentityRepository;
 import org.mitre.openid.connect.binder.service.IdentityService;
@@ -49,22 +48,22 @@ public class ServiceTest {
 		Mockito.reset(singleIdentityRepository, multipleIdentityRepository);
 		
 		// multi1 object has two single identities 1 & 2.
-		SubjectIssuer subjectIssuer1 = new SubjectIssuer("user1", "www.example.com");
-		identity1.setSubjectIssuer(subjectIssuer1);
-		SubjectIssuer subjectIssuer2 = new SubjectIssuer("user2", "www.example.com");
-		identity2.setSubjectIssuer(subjectIssuer2);
+		identity1.setSubject("user1");
+		identity1.setIssuer("www.example.com");
+		identity2.setSubject("user2");
+		identity2.setIssuer("www.example.com");
 		multi1.setId(1L);
 		identity1.setMultipleIdentity(multi1);
 		identity2.setMultipleIdentity(multi1);
 		multi1.setIdentities(Sets.newHashSet(identity1, identity2));
 		
 		// new identity to be bound
-		SubjectIssuer subjectIssuer3 = new SubjectIssuer("bind me", "www.bindme.com");
-		identity3.setSubjectIssuer(subjectIssuer3);
+		identity3.setSubject("bind me");
+		identity3.setIssuer("www.bindme.com");
 		
-		Mockito.when(singleIdentityRepository.findOne(subjectIssuer1)).thenReturn(identity1);
-		Mockito.when(singleIdentityRepository.findOne(subjectIssuer2)).thenReturn(identity2);
-		Mockito.when(singleIdentityRepository.findOne(subjectIssuer3)).thenReturn(identity3);
+		Mockito.when(singleIdentityRepository.findSingleIdentityBySubjectAndIssuer("user1", "www.example.com")).thenReturn(identity1);
+		Mockito.when(singleIdentityRepository.findSingleIdentityBySubjectAndIssuer("user2", "www.example.com")).thenReturn(identity2);
+		Mockito.when(singleIdentityRepository.findSingleIdentityBySubjectAndIssuer("bind me", "www.bindme.com")).thenReturn(identity3);
 		
 		// have save function simply return same object that was passed in.
 		Mockito.when(multipleIdentityRepository.save(Mockito.any(MultipleIdentity.class))).thenAnswer(new Answer<MultipleIdentity>() {

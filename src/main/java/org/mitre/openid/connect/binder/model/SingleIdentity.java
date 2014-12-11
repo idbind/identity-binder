@@ -3,8 +3,10 @@ package org.mitre.openid.connect.binder.model;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -19,7 +21,11 @@ import javax.persistence.Table;
 @Table(name = "identity")
 public class SingleIdentity {
 	
-	private SubjectIssuer subjectIssuer;
+	private Long id;
+	
+	// TODO set a uniqueness constraint on these
+	private String issuer;
+	private String subject;
 	
 	// implemented as a raw JSON string to facilitate compatibility with differing user info claims sets
 	private String userInfoJsonString;
@@ -31,21 +37,54 @@ public class SingleIdentity {
 	
 	private Date lastUsed;
 	
-	/**
-	 * @return the subjectIssuer
-	 */
-	@EmbeddedId
-	public SubjectIssuer getSubjectIssuer() {
-		return subjectIssuer;
-	}
 	
 	/**
-	 * @param subjectIssuer the subjectIssuer to set
+	 * @return the id
 	 */
-	public void setSubjectIssuer(SubjectIssuer subjectIssuer) {
-		this.subjectIssuer = subjectIssuer;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id")
+	public Long getId() {
+		return id;
 	}
-	
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the issuer
+	 */
+	@Column(name = "issuer")
+	public String getIssuer() {
+		return issuer;
+	}
+
+	/**
+	 * @param issuer the issuer to set
+	 */
+	public void setIssuer(String issuer) {
+		this.issuer = issuer;
+	}
+
+	/**
+	 * @return the subject
+	 */
+	@Column(name = "subject")
+	public String getSubject() {
+		return subject;
+	}
+
+	/**
+	 * @param subject the subject to set
+	 */
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
 	/**
 	 * @return the userInfoJsonString
 	 */
@@ -114,7 +153,11 @@ public class SingleIdentity {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((subjectIssuer == null) ? 0 : subjectIssuer.hashCode());
+		result = prime * result + ((firstUsed == null) ? 0 : firstUsed.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((issuer == null) ? 0 : issuer.hashCode());
+		result = prime * result + ((lastUsed == null) ? 0 : lastUsed.hashCode());
+		result = prime * result + ((subject == null) ? 0 : subject.hashCode());
 		result = prime * result + ((userInfoJsonString == null) ? 0 : userInfoJsonString.hashCode());
 		return result;
 	}
@@ -131,10 +174,30 @@ public class SingleIdentity {
 		if (getClass() != obj.getClass())
 			return false;
 		SingleIdentity other = (SingleIdentity) obj;
-		if (subjectIssuer == null) {
-			if (other.subjectIssuer != null)
+		if (firstUsed == null) {
+			if (other.firstUsed != null)
 				return false;
-		} else if (!subjectIssuer.equals(other.subjectIssuer))
+		} else if (!firstUsed.equals(other.firstUsed))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (issuer == null) {
+			if (other.issuer != null)
+				return false;
+		} else if (!issuer.equals(other.issuer))
+			return false;
+		if (lastUsed == null) {
+			if (other.lastUsed != null)
+				return false;
+		} else if (!lastUsed.equals(other.lastUsed))
+			return false;
+		if (subject == null) {
+			if (other.subject != null)
+				return false;
+		} else if (!subject.equals(other.subject))
 			return false;
 		if (userInfoJsonString == null) {
 			if (other.userInfoJsonString != null)

@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Set;
 
 import org.mitre.openid.connect.binder.model.SingleIdentity;
-import org.mitre.openid.connect.binder.model.SubjectIssuer;
 import org.mitre.openid.connect.binder.service.IdentityService;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +42,8 @@ public class MultipleIdentityAuthenticationProvider implements AuthenticationPro
 			SingleIdentity singleIdentity = identityService.getSingleBySubjectIssuer(newToken.getSub(), newToken.getIssuer());
 			if (singleIdentity == null) {
 				singleIdentity = new SingleIdentity();
-				singleIdentity.setSubjectIssuer(new SubjectIssuer(newToken.getSub(), newToken.getIssuer()));
+				singleIdentity.setSubject(newToken.getSub());
+				singleIdentity.setSubject(newToken.getIssuer());
 				singleIdentity.setFirstUsed(new Date());
 			}
 			
@@ -55,7 +55,6 @@ public class MultipleIdentityAuthenticationProvider implements AuthenticationPro
 			Authentication preexistingAuthentication = SecurityContextHolder.getContext().getAuthentication();
 			if (preexistingAuthentication instanceof MultipleIdentityAuthentication) {
 				
-				// XXX NEED TO DO CHECK FOR BOUND IDENTITY SET CONSISTENCY
 				// add on to existing authentication object
 				MultipleIdentityAuthentication oldAuthentication = (MultipleIdentityAuthentication) preexistingAuthentication;
 
