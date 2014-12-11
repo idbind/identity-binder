@@ -3,18 +3,16 @@
  */
 package org.mitre.openid.connect.binder.service;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.mitre.openid.connect.binder.authentication.MultipleIdentityAuthentication;
 import org.mitre.openid.connect.binder.model.SingleIdentity;
 import org.mitre.openid.connect.binder.model.MultipleIdentity;
 import org.mitre.openid.connect.binder.repository.SingleIdentityRepository;
 import org.mitre.openid.connect.binder.repository.MultipleIdentityRepository;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Sets;
@@ -33,54 +31,36 @@ public class IdentityServiceDefault implements IdentityService {
 	private MultipleIdentityRepository multipleIdentityRepository;
 
 	@Override
-	public MultipleIdentity merge() {
-		MultipleIdentityAuthentication authentication = (MultipleIdentityAuthentication) SecurityContextHolder.getContext().getAuthentication();
-		
-		OIDCAuthenticationToken boundToken = authentication.getCurrentToken(); // should be guaranteed to be one of the bound tokens
-		MultipleIdentity firstMultiple = getMultipleBySubjectIssuer(boundToken.getSub(), boundToken.getIssuer());
-		
-		OIDCAuthenticationToken unboundToken = authentication.getUnboundToken();
-		MultipleIdentity unmergedMultiple = getMultipleBySubjectIssuer(unboundToken.getSub(), unboundToken.getIssuer());
-		
-		if (unmergedMultiple == null) { // not part of another multiple, go ahead and merge it in
-			
-			return bindBySubjectIssuer(firstMultiple, unboundToken.getSub(), unboundToken.getIssuer());
-			
-		} else { // merge all the identities from unmerged multiple into the first multiple
-			
-			Set<SingleIdentity> mergedIdentities = firstMultiple.getIdentities();
-			mergedIdentities.addAll(unmergedMultiple.getIdentities());
-			firstMultiple.setIdentities(mergedIdentities);
-			multipleIdentityRepository.delete(unmergedMultiple);
-			return multipleIdentityRepository.save(firstMultiple);
-		}
-		
-	}
-	
-	@Override
-	public MultipleIdentity bind(MultipleIdentity multipleIdentity, SingleIdentity singleIdentity) {
+	public MultipleIdentity merge(Set<OIDCAuthenticationToken> tokens) {
 
-		if (multipleIdentity == null) {
-			multipleIdentity = new MultipleIdentity();
-		}
-
-		Set<SingleIdentity> identities = (multipleIdentity.getIdentities() == null) 
-				? new HashSet<SingleIdentity>() 
-				: multipleIdentity.getIdentities();
-
-		if (singleIdentity != null) {
+		MultipleIdentity multipleIdentity = new MultipleIdentity();
+		Set<SingleIdentity> identities = new HashSet<SingleIdentity>();
+		for (OIDCAuthenticationToken token : tokens) {
+			SingleIdentity singleIdentity = getSingleBySubjectIssuer(token.getSub(), token.getIssuer());
+			
+			// save identity information if it doesnt exist yet
+			if (singleIdentity == null) {
+				singleIdentity = new SingleIdentity();
+				singleIdentity.setSubject(token.getSub());
+				singleIdentity.setSubject(token.getIssuer());
+				singleIdentity.setFirstUsed(new Date());
+				singleIdentity.setUserInfoJsonString( (token.getUserInfo() == null) ? null : token.getUserInfo().toJson().getAsString() ); // update user info every time
+				singleIdentity.setLastUsed(new Date());
+				saveSingleIdentity(singleIdentity);
+			}
+			
+			// delete old multiple identity
+			MultipleIdentity oldMultiple = getMultipleBySubjectIssuer(token.getSub(), token.getIssuer());
+			if (oldMultiple != null) {
+				multipleIdentityRepository.delete(oldMultiple);
+			}
+			
+			// add to new one
 			identities.add(singleIdentity);
 		}
-
 		multipleIdentity.setIdentities(identities);
-
+		
 		return multipleIdentityRepository.save(multipleIdentity);
-	}
-
-	@Override
-	public MultipleIdentity bindBySubjectIssuer(MultipleIdentity multipleIdentity, String subject, String issuer) {
-
-		return bind(multipleIdentity, getSingleBySubjectIssuer(subject, issuer));
 	}
 
 	@Override
@@ -104,7 +84,7 @@ public class IdentityServiceDefault implements IdentityService {
 
 	@Override
 	public SingleIdentity getSingleBySubjectIssuer(String subject, String issuer) {
-		return singleIdentityRepository.findSingleIdentityBySubjectAndIssuer(subject, issuer);
+		return singleIdentityRepository.findBySubjectAndIssuer(subject, issuer);
 	}
 
 	@Override
@@ -128,22 +108,6 @@ public class IdentityServiceDefault implements IdentityService {
 	}
 
 	@Override
-	public boolean isLoggedIn(String subject, String issuer) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null || !(authentication instanceof MultipleIdentityAuthentication)) {
-			return false;
-		}
-
-		for (OIDCAuthenticationToken token : ((MultipleIdentityAuthentication) authentication).getTokens()) {
-			if (token.getSub() == subject && token.getIssuer() == issuer) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	@Override
 	public SingleIdentity saveSingleIdentity(SingleIdentity singleIdentity) {
 		return singleIdentityRepository.save(singleIdentity);
 	}
@@ -151,6 +115,23 @@ public class IdentityServiceDefault implements IdentityService {
 	@Override
 	public MultipleIdentity saveMultipleIdentity(MultipleIdentity multipleIdentity) {
 		return multipleIdentityRepository.save(multipleIdentity);
+	}
+	
+	@Override
+	public SingleIdentity saveTokenIdentity(OIDCAuthenticationToken token) {
+		
+		SingleIdentity singleIdentity = getSingleBySubjectIssuer(token.getSub(), token.getIssuer());
+		
+		// save identity information
+		if (singleIdentity == null) {
+			singleIdentity = new SingleIdentity();
+			singleIdentity.setSubject(token.getSub());
+			singleIdentity.setSubject(token.getIssuer());
+			singleIdentity.setFirstUsed(new Date());
+		}
+		singleIdentity.setUserInfoJsonString( (token.getUserInfo() == null) ? null : token.getUserInfo().toJson().getAsString() ); // update user info every time
+		singleIdentity.setLastUsed(new Date());
+		return saveSingleIdentity(singleIdentity);
 	}
 
 }

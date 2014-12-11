@@ -1,7 +1,10 @@
 package org.mitre.openid.connect.binder.service;
 
+import java.util.Set;
+
 import org.mitre.openid.connect.binder.model.SingleIdentity;
 import org.mitre.openid.connect.binder.model.MultipleIdentity;
+import org.mitre.openid.connect.model.OIDCAuthenticationToken;
 
 /**
  * 
@@ -11,35 +14,11 @@ import org.mitre.openid.connect.binder.model.MultipleIdentity;
 public interface IdentityService {
 	
 	/**
-	 * Merges separate sets of identities into a single new set of identities.
-	 * Identities are based on the set of id tokens inside the security context authentication.
+	 * Merges a set of identities into a single new set of identities. Identities are based on given set of OIDC id tokens.
 	 * 
 	 * @return
 	 */
-	public MultipleIdentity merge();
-
-	/**
-	 * Binds the given single identity to the given multiple identity object. If the multiple identity
-	 * argument is null, this will create a new multiple identity object.
-	 * 
-	 * @param multipleIdentity the multiple identity object to bind to.
-	 * @param singleIdentity the single identity to bind.
-	 * @return
-	 */
-	public MultipleIdentity bind(MultipleIdentity multipleIdentity, SingleIdentity singleIdentity);
-	
-	/**
-	 * Binds the single identity associated with the given subject/issuer pair to the given multiple identity object.
-	 * If the multiple identity argument is null, this will create a new multiple identity object.
-	 * 
-	 * This method assumes that this subject/issuer is known to this service already.
-	 * 
-	 * @param multipleIdentity the multiple identity object to bind to.
-	 * @param subject the subject of the identity to bind.
-	 * @param issuer the issuer of the identity to bind.
-	 * @return
-	 */
-	public MultipleIdentity bindBySubjectIssuer(MultipleIdentity multipleIdentity, String subject, String issuer);
+	public MultipleIdentity merge(Set<OIDCAuthenticationToken> tokens);
 	
 	/**
 	 * Unbinds the given single identity from the given multiple identity object. Does nothing if the multiple
@@ -94,13 +73,12 @@ public interface IdentityService {
 	 * @return
 	 */
 	public MultipleIdentity saveMultipleIdentity(MultipleIdentity multipleIdentity);
-	
+
 	/**
-	 * Determines if the user has an active authentication with the given subject and issuer.
+	 * Saves a single identity object using the given id token.
 	 * 
-	 * @param subject
-	 * @param issuer
+	 * @param token
 	 * @return
 	 */
-	public boolean isLoggedIn(String subject, String issuer);
+	public SingleIdentity saveTokenIdentity(OIDCAuthenticationToken token);
 }

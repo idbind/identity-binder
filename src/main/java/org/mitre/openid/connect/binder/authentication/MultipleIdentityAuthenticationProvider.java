@@ -1,9 +1,7 @@
 package org.mitre.openid.connect.binder.authentication;
 
-import java.util.Date;
 import java.util.Set;
 
-import org.mitre.openid.connect.binder.model.SingleIdentity;
 import org.mitre.openid.connect.binder.service.IdentityService;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,7 @@ import com.google.common.collect.Sets;
 public class MultipleIdentityAuthenticationProvider implements AuthenticationProvider {
 
 	@Autowired
-	private IdentityService identityService;
+	IdentityService identityService;
 	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -38,18 +36,7 @@ public class MultipleIdentityAuthenticationProvider implements AuthenticationPro
 
 			OIDCAuthenticationToken newToken = (OIDCAuthenticationToken) authentication;
 			
-			// save identity information
-			SingleIdentity singleIdentity = identityService.getSingleBySubjectIssuer(newToken.getSub(), newToken.getIssuer());
-			if (singleIdentity == null) {
-				singleIdentity = new SingleIdentity();
-				singleIdentity.setSubject(newToken.getSub());
-				singleIdentity.setSubject(newToken.getIssuer());
-				singleIdentity.setFirstUsed(new Date());
-			}
-			
-			singleIdentity.setUserInfoJsonString( (newToken.getUserInfo() == null) ? null : newToken.getUserInfo().toJson().getAsString() ); // update user info every time
-			singleIdentity.setLastUsed(new Date());
-			identityService.saveSingleIdentity(singleIdentity);
+			identityService.saveTokenIdentity(newToken);
 
 			// check for existing multi-authentication context
 			Authentication preexistingAuthentication = SecurityContextHolder.getContext().getAuthentication();
@@ -67,7 +54,7 @@ public class MultipleIdentityAuthenticationProvider implements AuthenticationPro
 				authorities.addAll(newToken.getAuthorities());
 
 
-				return new MultipleIdentityAuthentication(authorities, tokens, newToken, null);
+				return new MultipleIdentityAuthentication(authorities, tokens);
 
 			} else { // make a new multi-auth object with this OIDC token
 				

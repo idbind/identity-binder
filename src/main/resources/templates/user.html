@@ -6,6 +6,7 @@
 <title>User</title>
 </head>
 <body>
+    <p><a th:href="@{/login}">Login again</a></p>
 	<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
 	<form th:action="@{/logout}" method="post">
 		<input type="submit" value="Sign Out" />

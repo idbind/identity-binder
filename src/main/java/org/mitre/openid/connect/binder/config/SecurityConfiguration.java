@@ -5,6 +5,7 @@ import org.mitre.jwt.signer.service.impl.DefaultJwtSigningAndValidationService;
 import org.mitre.jwt.signer.service.impl.JWKSetCacheService;
 import org.mitre.oauth2.model.RegisteredClient;
 import org.mitre.oauth2.model.ClientDetailsEntity.AuthMethod;
+import org.mitre.openid.connect.binder.authentication.MultipleIdentityAuthenticationConsistencyFilter;
 import org.mitre.openid.connect.binder.authentication.MultipleIdentityAuthenticationProvider;
 import org.mitre.openid.connect.client.OIDCAuthenticationFilter;
 import org.mitre.openid.connect.client.OIDCFilterFactory;
@@ -37,10 +38,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests().antMatchers("/", "/home").permitAll().anyRequest().authenticated()
-		.and().formLogin().loginPage("/login").permitAll().and().logout().permitAll()
-		.and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
-		.and().addFilterBefore(openIdConnectAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class);
-		
+			.and()
+				.formLogin().loginPage("/login").permitAll().and().logout().permitAll()
+			.and()
+				.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
+			.and()
+				.addFilterBefore(openIdConnectAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class)
+				.addFilterBefore(multipleIdentityAuthenticationConsistencyFilter(), OIDCAuthenticationFilter.class);
 	}
 	
 	
@@ -52,6 +56,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
     @Bean
     public LoginUrlAuthenticationEntryPoint authenticationEntryPoint() {
     	return new LoginUrlAuthenticationEntryPoint("/openid_connect_login");
+    }
+    
+    @Bean
+    public MultipleIdentityAuthenticationConsistencyFilter multipleIdentityAuthenticationConsistencyFilter() {
+    	return new MultipleIdentityAuthenticationConsistencyFilter();
     }
     
 	@Bean

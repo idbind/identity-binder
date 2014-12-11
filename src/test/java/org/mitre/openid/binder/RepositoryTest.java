@@ -41,6 +41,8 @@ public class RepositoryTest {
 		multipleIdentityRepository.deleteAll();
 	}
 	
+	// SingleIdentity tests
+	
 	@Test
 	public void testSingleIdentityRoundTripSuccess() {
 		SingleIdentity identity = new SingleIdentity();
@@ -49,7 +51,9 @@ public class RepositoryTest {
 		
 		singleIdentityRepository.save(identity);
 		
-		assertThat(singleIdentityRepository.findSingleIdentityBySubjectAndIssuer("user", "www.example.com"), equalTo(identity));
+		SingleIdentity result = singleIdentityRepository.findBySubjectAndIssuer("user", "www.example.com");
+		
+		assertThat(result, equalTo(identity));
 	}
 	
 	@Test
@@ -62,17 +66,18 @@ public class RepositoryTest {
 		
 		identity.setUserInfoJsonString("{}");
 		
-		assertThat(singleIdentityRepository.findSingleIdentityBySubjectAndIssuer("user", "www.example.com"), not(equalTo(identity)));
+		assertThat(singleIdentityRepository.findBySubjectAndIssuer("user", "www.example.com"), not(equalTo(identity)));
 	}
 
+	
+	// MultipleIdentity tests
+	
 	@Test
 	public void testMultipleIdentityRoundTripSuccess() {
 		SingleIdentity identity1 = new SingleIdentity();
 		identity1.setId(1L);
 		identity1.setSubject("user1");
 		identity1.setIssuer("www.example.com");
-		
-		singleIdentityRepository.save(identity1);
 		
 		SingleIdentity identity2 = new SingleIdentity();
 		identity2.setId(2L);
@@ -92,7 +97,12 @@ public class RepositoryTest {
 		MultipleIdentity multiFromDB = multipleIdentityRepository.findOne(1L);
 		
 		assertThat(multiFromDB, equalTo(multi));
+		
+		// test cascade
+		assertThat(singleIdentityRepository.findBySubjectAndIssuer("user1", "www.example.com"), equalTo(identity1));
+		assertThat(singleIdentityRepository.findOne(2L), equalTo(identity2));
 	}
+	
 	/* TODO test custom repository query once it exists..
 	@Test
 	public void testMultipleIdentityQueryBySingleIdentity() {
