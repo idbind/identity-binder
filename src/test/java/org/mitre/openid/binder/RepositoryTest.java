@@ -87,9 +87,6 @@ public class RepositoryTest {
 		MultipleIdentity multi = new MultipleIdentity();
 		multi.setId(1L);
 		
-		identity1.setMultipleIdentity(multi);
-		identity2.setMultipleIdentity(multi);
-		
 		multi.setIdentities(Sets.newHashSet(identity1, identity2));
 		
 		multipleIdentityRepository.save(multi);
@@ -97,10 +94,33 @@ public class RepositoryTest {
 		MultipleIdentity multiFromDB = multipleIdentityRepository.findOne(1L);
 		
 		assertThat(multiFromDB, equalTo(multi));
+	}
+	
+	@Test
+	public void testMultipleToSingleCascadeSave() {
+		SingleIdentity identity1 = new SingleIdentity();
+		identity1.setSubject("user1");
+		identity1.setIssuer("www.example.com");
+		
+		SingleIdentity identity2 = new SingleIdentity();
+		identity2.setSubject("user2");
+		identity2.setIssuer("www.example.com");
+		
+		MultipleIdentity multi = new MultipleIdentity();
+		multi.setId(1L);
+		
+		multi.setIdentities(Sets.newHashSet(identity1, identity2));
+		
+		multipleIdentityRepository.save(multi);
+
 		
 		// test cascade
-		assertThat(singleIdentityRepository.findBySubjectAndIssuer("user1", "www.example.com"), equalTo(identity1));
-		assertThat(singleIdentityRepository.findOne(2L), equalTo(identity2));
+		SingleIdentity singleResult1 = singleIdentityRepository.findBySubjectAndIssuer("user1", "www.example.com");
+		identity1.setId(singleResult1.getId());
+		assertThat(singleResult1, equalTo(identity1));
+		SingleIdentity singleResult2 = singleIdentityRepository.findBySubjectAndIssuer("user2", "www.example.com");
+		identity2.setId(singleResult2.getId());
+		assertThat(singleResult2, equalTo(identity2));
 	}
 	
 	/* TODO test custom repository query once it exists..

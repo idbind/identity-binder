@@ -21,29 +21,38 @@ import javax.persistence.Table;
 @Table(name = "identity")
 public class SingleIdentity {
 	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Long id;
 	
 	// TODO set a uniqueness constraint on these
+
+	@Column(name = "issuer")
 	private String issuer;
+
+	@Column(name = "subject")
 	private String subject;
 	
 	// implemented as a raw JSON string to facilitate compatibility with differing user info claims sets
+	@Column(name = "user_info_json_string")
 	private String userInfoJsonString;
 
 	// the multiple identity object this is a part of
+	@ManyToOne
+	@JoinColumn(name = "multiple_identity_id", referencedColumnName = "id")
 	private MultipleIdentity multipleIdentity;
-	
+
+	@Column(name = "first_used")
 	private Date firstUsed;
-	
+
+	@Column(name = "last_used")
 	private Date lastUsed;
 	
 	
 	/**
 	 * @return the id
 	 */
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name = "id")
 	public Long getId() {
 		return id;
 	}
@@ -58,7 +67,6 @@ public class SingleIdentity {
 	/**
 	 * @return the issuer
 	 */
-	@Column(name = "issuer")
 	public String getIssuer() {
 		return issuer;
 	}
@@ -73,7 +81,6 @@ public class SingleIdentity {
 	/**
 	 * @return the subject
 	 */
-	@Column(name = "subject")
 	public String getSubject() {
 		return subject;
 	}
@@ -88,7 +95,6 @@ public class SingleIdentity {
 	/**
 	 * @return the userInfoJsonString
 	 */
-	@Column(name = "user_info_json_string")
 	public String getUserInfoJsonString() {
 		return userInfoJsonString;
 	}
@@ -103,8 +109,6 @@ public class SingleIdentity {
 	/**
 	 * @return the multipleIdentity
 	 */
-	@ManyToOne
-	@JoinColumn(name = "multipleIdentityId", referencedColumnName = "id")
 	public MultipleIdentity getMultipleIdentity() {
 		return multipleIdentity;
 	}
@@ -119,7 +123,6 @@ public class SingleIdentity {
 	/**
 	 * @return the firstUsed
 	 */
-	@Column(name = "first_used")
 	public Date getFirstUsed() {
 		return firstUsed;
 	}
@@ -134,7 +137,6 @@ public class SingleIdentity {
 	/**
 	 * @return the lastUsed
 	 */
-	@Column(name = "last_used")
 	public Date getLastUsed() {
 		return lastUsed;
 	}

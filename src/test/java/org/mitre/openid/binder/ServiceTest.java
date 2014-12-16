@@ -24,7 +24,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -70,7 +69,7 @@ public class ServiceTest {
 		identity3.setSubject("bind me");
 		identity3.setIssuer("www.bindme.com");
 		
-		Mockito.when(multipleIdentityRepository.findAll()).thenReturn(Lists.newArrayList(multi1));
+		Mockito.when(multipleIdentityRepository.findAll()).thenReturn(Sets.newHashSet(multi1));
 		
 		Mockito.when(singleIdentityRepository.findBySubjectAndIssuer("user1", "www.example.com")).thenReturn(identity1);
 		Mockito.when(singleIdentityRepository.findBySubjectAndIssuer("user2", "www.example.com")).thenReturn(identity2);
@@ -113,7 +112,7 @@ public class ServiceTest {
 	public void testGetMultiple() {
 		
 		MultipleIdentity multi2 = new MultipleIdentity();
-		Mockito.when(multipleIdentityRepository.findAll()).thenReturn(Lists.newArrayList(multi1, multi2));
+		Mockito.when(multipleIdentityRepository.findAll()).thenReturn(Sets.newHashSet(multi1, multi2));
 		
 		// success case
 		assertThat(service.getMultipleBySubjectIssuer("user1", "www.example.com"), equalTo(multi1));
