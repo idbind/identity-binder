@@ -2,6 +2,7 @@ package org.mitre.openid.connect.binder.model;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,9 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 
 /**
@@ -52,8 +50,7 @@ public class MultipleIdentity {
 	/**
 	 * @return the identities
 	 */
-	@OneToMany(fetch = FetchType.EAGER)
-	@Cascade({CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.SAVE_UPDATE})
+	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	@JoinColumn(name = "multiple_id")
 	public Set<SingleIdentity> getIdentities() {
 		return identities;
