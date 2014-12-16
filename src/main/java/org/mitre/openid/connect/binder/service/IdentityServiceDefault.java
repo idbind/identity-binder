@@ -38,7 +38,6 @@ public class IdentityServiceDefault implements IdentityService {
 		for (OIDCAuthenticationToken token : tokens) {
 			SingleIdentity singleIdentity = getSingleBySubjectIssuer(token.getSub(), token.getIssuer());
 			
-			// save identity information if it doesnt exist yet
 			if (singleIdentity == null) {
 				singleIdentity = new SingleIdentity();
 				singleIdentity.setSubject(token.getSub());
@@ -46,7 +45,6 @@ public class IdentityServiceDefault implements IdentityService {
 				singleIdentity.setFirstUsed(new Date());
 				singleIdentity.setUserInfoJsonString( (token.getUserInfo() == null) ? null : token.getUserInfo().toJson().getAsString() ); // update user info every time
 				singleIdentity.setLastUsed(new Date());
-				saveSingleIdentity(singleIdentity);
 			}
 			
 			// delete old multiple identity
@@ -60,7 +58,7 @@ public class IdentityServiceDefault implements IdentityService {
 		}
 		multipleIdentity.setIdentities(identities);
 		
-		return multipleIdentityRepository.save(multipleIdentity);
+		return saveMultipleIdentity(multipleIdentity);
 	}
 
 	@Override
@@ -109,7 +107,24 @@ public class IdentityServiceDefault implements IdentityService {
 
 	@Override
 	public SingleIdentity saveSingleIdentity(SingleIdentity singleIdentity) {
-		return singleIdentityRepository.save(singleIdentity);
+		
+		if (singleIdentity == null) { // return early for null
+			return null;
+		}
+		
+		// check to see if subject/issuer already exists
+		SingleIdentity updatedIdentity = getSingleBySubjectIssuer(singleIdentity.getSubject(), singleIdentity.getIssuer());
+		
+		if (updatedIdentity == null) { // just save it right away
+			return singleIdentityRepository.save(singleIdentity);
+		}
+		
+		// else, update the old one
+		updatedIdentity.setFirstUsed(singleIdentity.getFirstUsed());
+		updatedIdentity.setLastUsed(singleIdentity.getLastUsed());
+		updatedIdentity.setUserInfoJsonString(singleIdentity.getUserInfoJsonString());
+		
+		return singleIdentityRepository.save(updatedIdentity);
 	}
 
 	@Override

@@ -8,11 +8,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+
 
 /**
  * Model class for representing a user with one or more OpenID Connect
@@ -25,18 +27,16 @@ import org.hibernate.annotations.CascadeType;
 @Table(name = "multiple_identity")
 public class MultipleIdentity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
 	private Long id;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "multipleIdentity")
-	@Cascade(CascadeType.ALL)
 	private Set<SingleIdentity> identities;
 
 	/**
 	 * @return the id
 	 */
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	public Long getId() {
 		return id;
 	}
@@ -52,6 +52,9 @@ public class MultipleIdentity {
 	/**
 	 * @return the identities
 	 */
+	@OneToMany(fetch = FetchType.EAGER)
+	@Cascade({CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.SAVE_UPDATE})
+	@JoinColumn(name = "multiple_id")
 	public Set<SingleIdentity> getIdentities() {
 		return identities;
 	}
@@ -61,14 +64,6 @@ public class MultipleIdentity {
 	 *            the identities to set
 	 */
 	public void setIdentities(Set<SingleIdentity> identities) {
-
-		if (identities != null) {
-			for (SingleIdentity identity : identities) {
-				if (identity != null) {
-					identity.setMultipleIdentity(this);
-				}
-			}
-		}
 		this.identities = identities;
 	}
 

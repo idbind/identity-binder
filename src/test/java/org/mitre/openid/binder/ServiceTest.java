@@ -61,8 +61,6 @@ public class ServiceTest {
 		identity2.setSubject("user2");
 		identity2.setIssuer("www.example.com");
 		multi1.setId(1L);
-		identity1.setMultipleIdentity(multi1);
-		identity2.setMultipleIdentity(multi1);
 		multi1.setIdentities(Sets.newHashSet(identity1, identity2));
 		
 		// new identity to be bound
