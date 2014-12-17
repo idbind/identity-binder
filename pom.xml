@@ -66,6 +66,11 @@
 			<version>${mitreid-connect.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>net.sourceforge.nekohtml</groupId>
+			<artifactId>nekohtml</artifactId>
+			<version>1.9.15</version>
+		</dependency>
 	</dependencies>
 
 
