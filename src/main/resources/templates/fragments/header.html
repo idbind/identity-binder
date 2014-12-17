@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<head th:fragment="header">
+<head th:fragment="header" th:inline="text">
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,7 +10,7 @@
 	<meta name="author" content="">
 	<link rel="icon" href="favicon.ico">
 	
-	<title>Identity Binding Service</title>
+	<title>Identity Binding Service[[ ${ title != null } ? ' - ' + ${ title } : '' ]]</title>
 	
 	<!-- Bootstrap core CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
