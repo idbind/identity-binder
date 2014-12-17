@@ -5,13 +5,26 @@
 <head th:replace="fragments/header :: header">
 </head>
 <body>
-	<h1>Welcome!</h1>
 
-	<p>
-		Click <a th:href="@{/user}">here</a> to see a greeting.
-	</p>
-	
-	
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+
+<!-- begin page content -->
+
+				<h1>Welcome!</h1>
+			
+				<p>
+					Click <a th:href="@{/user}">here</a> to see a greeting.
+				</p>
+
+<!-- end page content -->
+			
+			</div>
+		</div>	
+	</div>
+
 	<th:block th:include="fragments/jslib :: jslib"></th:block>
 	
 </body>
