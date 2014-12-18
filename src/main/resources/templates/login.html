@@ -2,16 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<head>
-<title>Login</title>
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet" />
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<head th:replace="fragments/header :: header(title='Log In')">
 </head>
 <body>
+
+	<nav th:replace="fragments/navbar :: navbar(title='Log In')"></nav>
+
 	<div class="container-fluid main">
 		<div class="row-fluid">
 			<div class="span10 offset1">
+<!-- begin page content -->
 
 				<h2>Log In</h2>
 
@@ -49,9 +49,15 @@
 					</div>
 
 				</div>
+
+<!-- end page content -->
+			
 			</div>
-		</div>
+		</div>	
 	</div>
+
+	<th:block th:include="fragments/jslib :: jslib"></th:block>
+	
 	<script type="text/javascript">
 		$(document)
 				.ready(

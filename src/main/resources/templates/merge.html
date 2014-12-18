@@ -2,10 +2,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<head>
-<title>Identity Binding Service</title>
+<head th:replace="fragments/header :: header(title='Home')">
 </head>
 <body>
+
+	<nav th:replace="fragments/navbar :: navbar(title='Home')"></nav>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+
+<!-- begin page content -->
+
 	<h1>Merge</h1>
 
 	<p>Merge page placeholder.</p>
@@ -22,6 +30,13 @@
 		<input type="submit" value="Sign Out" />
 	</form>
 
+<!-- end page content -->
+			
+			</div>
+		</div>	
+	</div>
 
+	<th:block th:include="fragments/jslib :: jslib"></th:block>
+	
 </body>
 </html>

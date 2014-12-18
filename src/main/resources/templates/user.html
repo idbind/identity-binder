@@ -2,14 +2,31 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<head>
-<title>User</title>
+<head th:replace="fragments/header :: header(title='Home')">
 </head>
 <body>
+
+	<nav th:replace="fragments/navbar :: navbar(title='Home')"></nav>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+
+<!-- begin page content -->
+
     <p><a th:href="@{/login}">Login again</a></p>
 	<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
 	<form th:action="@{/logout}" method="post">
 		<input type="submit" value="Sign Out" />
 	</form>
+
+<!-- end page content -->
+			
+			</div>
+		</div>	
+	</div>
+
+	<th:block th:include="fragments/jslib :: jslib"></th:block>
+	
 </body>
 </html>
