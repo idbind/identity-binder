@@ -3,12 +3,14 @@ package org.mitre.openid.connect.binder.authentication;
 import java.util.Set;
 
 import org.mitre.openid.connect.binder.service.IdentityService;
+import org.mitre.openid.connect.client.NamedAdminAuthoritiesMapper;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.google.common.collect.Sets;
@@ -16,7 +18,9 @@ import com.google.common.collect.Sets;
 public class MultipleIdentityAuthenticationProvider implements AuthenticationProvider {
 
 	@Autowired
-	IdentityService identityService;
+	private IdentityService identityService;
+	
+	private GrantedAuthoritiesMapper authoritiesMapper = new NamedAdminAuthoritiesMapper();
 	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -54,11 +58,11 @@ public class MultipleIdentityAuthenticationProvider implements AuthenticationPro
 				authorities.addAll(newToken.getAuthorities());
 
 
-				return new MultipleIdentityAuthentication(authorities, tokens);
+				return new MultipleIdentityAuthentication(authoritiesMapper.mapAuthorities(authorities), tokens);
 
 			} else { // make a new multi-auth object with this OIDC token
 				
-				return new MultipleIdentityAuthentication(newToken.getAuthorities(), newToken);
+				return new MultipleIdentityAuthentication(authoritiesMapper.mapAuthorities(newToken.getAuthorities()), newToken);
 			}
 		}
 
@@ -69,6 +73,22 @@ public class MultipleIdentityAuthenticationProvider implements AuthenticationPro
 	public boolean supports(Class<?> authentication) {
 		return MultipleIdentityAuthentication.class.isAssignableFrom(authentication)
 				|| OIDCAuthenticationToken.class.isAssignableFrom(authentication);
+	}
+
+	public IdentityService getIdentityService() {
+		return identityService;
+	}
+
+	public void setIdentityService(IdentityService identityService) {
+		this.identityService = identityService;
+	}
+
+	public GrantedAuthoritiesMapper getAuthoritiesMapper() {
+		return authoritiesMapper;
+	}
+
+	public void setAuthoritiesMapper(GrantedAuthoritiesMapper authoritiesMapper) {
+		this.authoritiesMapper = authoritiesMapper;
 	}
 
 }

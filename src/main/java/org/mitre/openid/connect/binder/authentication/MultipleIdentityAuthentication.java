@@ -1,11 +1,15 @@
 package org.mitre.openid.connect.binder.authentication;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+
+import scala.annotation.meta.getter;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -13,7 +17,9 @@ public class MultipleIdentityAuthentication extends AbstractAuthenticationToken 
 
 	private static final long serialVersionUID = -134174160460176972L;
 
-	private final ImmutableSet<OIDCAuthenticationToken> tokens;
+	private final Set<OIDCAuthenticationToken> tokens;
+	
+	private final Set<Map<String, String>> principal;
 
 	/**
 	 * Constructs a new authentication object with a single identity token.
@@ -27,6 +33,8 @@ public class MultipleIdentityAuthentication extends AbstractAuthenticationToken 
 
 		setAuthenticated(true);
 		tokens = ImmutableSet.of(token);
+		principal = ImmutableSet.of((Map<String, String>)token.getPrincipal());
+		
 	}
 
 	/**
@@ -41,6 +49,14 @@ public class MultipleIdentityAuthentication extends AbstractAuthenticationToken 
 
 		setAuthenticated(true);
 		this.tokens = ImmutableSet.copyOf(tokens);
+
+		Set<Map<String, String>> p = new HashSet<Map<String,String>>();
+		for (OIDCAuthenticationToken token : tokens) {
+			p.add((Map<String, String>) token.getPrincipal());
+		}
+		principal = ImmutableSet.copyOf(p);
+		
+
 	}
 
 	@Override
@@ -51,9 +67,7 @@ public class MultipleIdentityAuthentication extends AbstractAuthenticationToken 
 
 	@Override
 	public Object getPrincipal() {
-		// TODO Auto-generated method stub
-		// TODO this should probably be the identifier or index of the data model of this user identities bunch
-		return tokens.toString();
+		return principal;
 	}
 
 	/**

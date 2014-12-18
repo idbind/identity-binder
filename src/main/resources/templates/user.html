@@ -16,6 +16,10 @@
 
     <p><a th:href="@{/login}">Login again</a></p>
 	<h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
+	
+	<p>Logged user: <span sec:authentication="name">Bob</span></p>
+	<p>Roles: <span sec:authentication="authorities">[ROLE_BOB]</span></p>
+	
 	<form th:action="@{/logout}" method="post">
 		<input type="submit" value="Sign Out" />
 	</form>
