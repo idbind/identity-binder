@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head></head>
+
+<body>
+	
+	<nav th:fragment="navbar" th:inline="text" class="navbar navbar-default navbar-static-top">
+		<div class="container-fluid">
+			<div class="navbar-header pull-left">
+				<span class="navbar-brand">Identity Binding Service[[ ${ title != null } ? ' - ' + ${ title } : '' ]]</span>
+		    </div>
+
+			<div class="navbar-header pull-right">
+				<p class="navbar-text">
+				
+					( Log in button / text goes here )
+				
+				</p>
+			</div>		
+			
+		</div>
+	</nav>
+	
+</body>
+</html>
