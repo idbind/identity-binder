@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org"
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head th:replace="fragments/header :: header(title='Home')">
 </head>
@@ -12,21 +11,26 @@
 		<div class="row">
 			<div class="col-md-12">
 
-<!-- begin page content -->
+				<!-- begin page content -->
 
-				<h1>Welcome!</h1>
-			
-				<p>
-					Click <a th:href="@{/user}">here</a> to see a greeting.
-				</p>
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<h3 class="panel-title">What is this?</h3>
+					</div>
+					<div class="panel-body">The MITRE Partnership Network Identity Binding Service allows you to connect multiple online identities together so that enabled MPN applications can recognize you no matter which identity you use to log in. To get started, log in with your digital identity below.</div>
+				</div>
+				
+				<div class="text-center">
+					<a class="btn btn-success long-button" th:href="@{/user}">Log In</a>
+				</div>
 
-<!-- end page content -->
-			
+				<!-- end page content -->
+
 			</div>
-		</div>	
+		</div>
 	</div>
 
 	<th:block th:include="fragments/jslib :: jslib"></th:block>
-	
+
 </body>
 </html>
