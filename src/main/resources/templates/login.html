@@ -30,6 +30,11 @@
 							<button class="btn" id="localhost">Local MITREid Connect
 								Server (default setup)</button>
 						</div>
+						
+						<div class="span2">
+							<button class="btn" id="localhost2">Local MITREid Connect
+								Server #2</button>
+						</div>
 
 						<div class="span2">
 							<button class="btn" id="mitreidorg">mitre.org
@@ -69,6 +74,14 @@
 												$('#identifier')
 														.val(
 																'http://localhost:8080/openid-connect-server-webapp/');
+											});
+							$('#localhost2')
+							.on(
+											'click',
+											function() {
+												$('#identifier')
+														.val(
+																'http://localhost:8080/my-openid-connect-server/');
 											});
 							$('#mitreidorg').on('click', function() {
 								$('#identifier').val('user@mitreid.org');

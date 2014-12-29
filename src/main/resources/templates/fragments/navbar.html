@@ -1,27 +1,42 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org"
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head></head>
 
 <body>
-	
-	<nav th:fragment="navbar" th:inline="text" class="navbar navbar-default navbar-static-top">
+
+	<nav th:fragment="navbar" th:inline="text" class="navbar navbar-default navbar-static-top" role="navigation">
 		<div class="container-fluid">
 			<div class="navbar-header pull-left">
 				<span class="navbar-brand">Identity Binding Service[[ ${ title != null } ? ' - ' + ${ title } : '' ]]</span>
-		    </div>
+			</div>
+	
+			<ul class="nav navbar-nav navbar-right" sec:authorize="!isAuthenticated()">
+				<li><a th:href="@{/login}">Login</a></li>
+			</ul>
 
-			<div class="navbar-header pull-right">
-				<p class="navbar-text">
-				
-					( Log in button / text goes here )
-				
-				</p>
-			</div>		
-			
+			<ul class="nav navbar-nav navbar-right" sec:authorize="isAuthenticated()">
+
+				<li>
+					<form class="navbar-form" th:action="@{/logout}" method="post">
+						<input type="submit" class="btn btn-link" value="Logout" />
+					</form>
+				</li>
+
+				<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+					aria-expanded="false"> Login <span class="caret"></span>
+				</a>
+					<ul class="dropdown-menu" role="menu">
+						<li><a th:href="@{/login}">Login</a></li>
+						<li class="divider"></li>
+						<li><a href="#">Another action</a></li>
+						<li><a href="#">Something else here</a></li>
+					</ul></li>
+
+			</ul>
+
 		</div>
 	</nav>
-	
+
 </body>
 </html>
