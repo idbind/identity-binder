@@ -81,8 +81,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	@Bean
 	public MultipleIdentityAuthenticationProvider openIdConnectAuthenticationProvider() {
 		MultipleIdentityAuthenticationProvider authenticationProvider = new MultipleIdentityAuthenticationProvider();
-
-		// TODO do authorities mapping
 		
 		return authenticationProvider;
 	}
