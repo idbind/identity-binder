@@ -3,8 +3,6 @@ package org.mitre.openid.binder;
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
 
-import java.util.Set;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +13,6 @@ import org.mitre.openid.connect.binder.repository.MultipleIdentityRepository;
 import org.mitre.openid.connect.binder.repository.SingleIdentityRepository;
 import org.mitre.openid.connect.binder.service.IdentityService;
 import org.mitre.openid.connect.binder.service.IdentityServiceDefault;
-import org.mitre.openid.connect.model.OIDCAuthenticationToken;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -81,22 +78,6 @@ public class ServiceTest {
 		      return (MultipleIdentity) args[0];
 		    }
 		  });
-	}
-	
-	@Test
-	public void testMerge() {
-		OIDCAuthenticationToken token1 = new OIDCAuthenticationToken("user1", "www.example.com", null, null, null, null);
-		OIDCAuthenticationToken token2 = new OIDCAuthenticationToken("user2", "www.example.com", null, null, null, null);
-		OIDCAuthenticationToken token3 = new OIDCAuthenticationToken("bind me", "www.bindme.com", null, null, null, null);
-		
-		Set<OIDCAuthenticationToken> tokens = Sets.newHashSet(token1, token2, token3);
-		
-		
-		MultipleIdentity result = service.merge(tokens);
-		
-		multi1.getIdentities().add(identity3);
-		
-		assertThat(result.getIdentities(), equalTo(multi1.getIdentities()));
 	}
 	
 	@Test

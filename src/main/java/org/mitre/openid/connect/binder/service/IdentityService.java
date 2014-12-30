@@ -1,6 +1,6 @@
 package org.mitre.openid.connect.binder.service;
 
-import java.util.Set;
+import javax.naming.AuthenticationNotSupportedException;
 
 import org.mitre.openid.connect.binder.model.SingleIdentity;
 import org.mitre.openid.connect.binder.model.MultipleIdentity;
@@ -14,11 +14,13 @@ import org.mitre.openid.connect.model.OIDCAuthenticationToken;
 public interface IdentityService {
 	
 	/**
-	 * Merges a set of identities into a single new set of identities. Identities are based on given set of OIDC id tokens.
+	 * Merges a set of identities into a single new set of identities. 
+	 * Identities are based on OIDC Tokens from the current Security Context.
 	 * 
 	 * @return
+	 * @throws AuthenticationNotSupportedException 
 	 */
-	public MultipleIdentity merge(Set<OIDCAuthenticationToken> tokens);
+	public MultipleIdentity merge() throws AuthenticationNotSupportedException;
 	
 	/**
 	 * Unbinds the given single identity from the given multiple identity object. Does nothing if the multiple
@@ -81,4 +83,11 @@ public interface IdentityService {
 	 * @return
 	 */
 	public SingleIdentity saveTokenIdentity(OIDCAuthenticationToken token);
+	
+	/**
+	 * Checks the Security Context and fetches the current Multiple Identity object.
+	 * 
+	 * @return
+	 */
+	public MultipleIdentity getCurrentMultiple();
 }

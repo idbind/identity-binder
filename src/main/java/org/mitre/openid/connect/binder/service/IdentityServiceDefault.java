@@ -5,14 +5,20 @@ package org.mitre.openid.connect.binder.service;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
+import javax.naming.AuthenticationNotSupportedException;
+
+import org.mitre.openid.connect.binder.authentication.MultipleIdentityAuthentication;
 import org.mitre.openid.connect.binder.model.SingleIdentity;
 import org.mitre.openid.connect.binder.model.MultipleIdentity;
 import org.mitre.openid.connect.binder.repository.SingleIdentityRepository;
 import org.mitre.openid.connect.binder.repository.MultipleIdentityRepository;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Sets;
@@ -31,11 +37,11 @@ public class IdentityServiceDefault implements IdentityService {
 	private MultipleIdentityRepository multipleIdentityRepository;
 
 	@Override
-	public MultipleIdentity merge(Set<OIDCAuthenticationToken> tokens) {
+	public MultipleIdentity merge() throws AuthenticationNotSupportedException {
 
 		MultipleIdentity multipleIdentity = new MultipleIdentity();
 		Set<SingleIdentity> identities = new HashSet<SingleIdentity>();
-		for (OIDCAuthenticationToken token : tokens) {
+		for (OIDCAuthenticationToken token : getCurrentTokens()) {
 			SingleIdentity singleIdentity = getSingleBySubjectIssuer(token.getSub(), token.getIssuer());
 			
 			if (singleIdentity == null) {
@@ -148,6 +154,36 @@ public class IdentityServiceDefault implements IdentityService {
 		singleIdentity.setUserInfoJsonString( (token.getUserInfo() == null) ? null : token.getUserInfo().toJson().getAsString() ); // update user info every time
 		singleIdentity.setLastUsed(new Date());
 		return saveSingleIdentity(singleIdentity);
+	}
+
+	@Override
+	public MultipleIdentity getCurrentMultiple() {
+		
+		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
+		Set<OIDCAuthenticationToken> tokens = ((MultipleIdentityAuthentication) authN).getTokens();
+		Iterator<OIDCAuthenticationToken> iter = tokens.iterator();
+		if (!iter.hasNext()) {
+			throw new IllegalStateException("OIDC Authentication must be present.");
+		}
+		OIDCAuthenticationToken token = iter.next();
+		
+		return getMultipleBySubjectIssuer(token.getSub(), token.getIssuer());
+	}
+
+	/**
+	 * Gets the OIDC Tokens from the current Security Context.
+	 * @return
+	 * @throws AuthenticationNotSupportedException 
+	 */
+	private Set<OIDCAuthenticationToken> getCurrentTokens() throws AuthenticationNotSupportedException {
+		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
+		
+		if ( !(authN instanceof MultipleIdentityAuthentication) ) {
+			throw new AuthenticationNotSupportedException("Authentication needs to be of type MultipleIdentityAuthentication but was: " + authN.getClass() + ".");
+		}
+		
+		MultipleIdentityAuthentication multiAuth = (MultipleIdentityAuthentication) authN;
+		return multiAuth.getTokens();
 	}
 
 }

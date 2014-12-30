@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:replace="fragments/header :: header(title='Accounts')">
+</head>
+<body>
+
+	<nav th:replace="fragments/navbar :: navbar(title='Accounts')"></nav>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+
+				<!-- begin page content -->
+
+				<table class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Subject</th>
+							<th>Issuer</th>
+							<th>First Used</th>
+							<th>Last Used</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="account,iter : ${accounts}">
+							<td th:text="${iter.count}"></td>
+							<td th:text="${account.subject}"></td>
+							<td th:text="${account.issuer}"></td>
+							<td th:text="${account.firstUsed}"></td>
+							<td th:text="${account.lastUsed}"></td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<div class="text-center">
+					<a class="btn btn-success" th:href="@{/login}">Add Another Account</a>
+				</div>
+
+				<!-- end page content -->
+
+			</div>
+		</div>
+	</div>
+
+	<th:block th:include="fragments/jslib :: jslib"></th:block>
+
+</body>
+</html>

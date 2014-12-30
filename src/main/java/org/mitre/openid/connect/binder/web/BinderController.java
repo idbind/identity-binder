@@ -2,11 +2,8 @@ package org.mitre.openid.connect.binder.web;
 
 import javax.naming.AuthenticationNotSupportedException;
 
-import org.mitre.openid.connect.binder.authentication.MultipleIdentityAuthentication;
 import org.mitre.openid.connect.binder.service.IdentityService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,17 +17,11 @@ public class BinderController {
 	
 	@RequestMapping(value = "/merge", method = RequestMethod.POST)
 	public ModelAndView bind() {
-		ModelAndView mv = new ModelAndView("user");
+		ModelAndView mv = new ModelAndView("redirect:accounts");
 		
 		try {
-			Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 			
-			if ( !(authN instanceof MultipleIdentityAuthentication) ) {
-				throw new AuthenticationNotSupportedException("Authentication needs to be of type MultipleIdentityAuthentication but was: " + authN.getClass() + ".");
-			}
-			
-			MultipleIdentityAuthentication multiAuth = (MultipleIdentityAuthentication) authN;
-			identityService.merge(multiAuth.getTokens());
+			identityService.merge();
 			
 		} catch (AuthenticationNotSupportedException e) {
 			// TODO Auto-generated catch block
@@ -45,10 +36,12 @@ public class BinderController {
 		return new ModelAndView("merge");
 	}
 	
-	@RequestMapping(value = "/unbind", method = RequestMethod.GET)
-	public ModelAndView unbind() {
-		ModelAndView mv = new ModelAndView("user");
-		// TODO actual stuff
-		return mv;
+	@RequestMapping(value = "/accounts", method = RequestMethod.GET)
+	public ModelAndView accountsView() {
+		ModelAndView mav = new ModelAndView("accounts");
+		
+		mav.addObject("accounts", identityService.getCurrentMultiple().getIdentities());
+		
+		return mav;
 	}
 }

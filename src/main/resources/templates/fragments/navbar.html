@@ -11,6 +11,10 @@
 				<span class="navbar-brand">Identity Binding Service[[ ${ title != null } ? ' - ' + ${ title } : '' ]]</span>
 			</div>
 	
+			<ul class="nav navbar-nav navbar-left" sec:authorize="isAuthenticated()">
+				<li><a th:href="@{/accounts}">Accounts</a></li>
+			</ul>
+	
 			<ul class="nav navbar-nav navbar-right" sec:authorize="!isAuthenticated()">
 				<li><a th:href="@{/login}">Log In</a></li>
 			</ul>
