@@ -1,5 +1,7 @@
 package org.mitre.openid.connect.binder.service;
 
+import java.util.Set;
+
 import javax.naming.AuthenticationNotSupportedException;
 
 import org.mitre.openid.connect.binder.model.SingleIdentity;
@@ -90,4 +92,10 @@ public interface IdentityService {
 	 * @return
 	 */
 	public MultipleIdentity getCurrentMultiple();
+	
+	/**
+	 * Returns all identities known to this service.
+	 * @return
+	 */
+	public Set<SingleIdentity> getAllIdentities();
 }

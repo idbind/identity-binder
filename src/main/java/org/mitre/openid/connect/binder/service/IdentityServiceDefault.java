@@ -186,4 +186,11 @@ public class IdentityServiceDefault implements IdentityService {
 		return multiAuth.getTokens();
 	}
 
+	@Override
+	public Set<SingleIdentity> getAllIdentities() {
+		return Sets.newHashSet(singleIdentityRepository.findAll());
+	}
+	
+	
+
 }
