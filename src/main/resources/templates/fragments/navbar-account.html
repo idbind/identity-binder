@@ -18,7 +18,27 @@
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Accounts<span class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu">
 						<li>
-							<a th:fragment="account(token)" href="#" ><span class="text-primary">[[${ token.sub }]]</span> <br> <small class="text-muted">[[${ token.issuer }]]</small></a>
+							<a th:fragment="account(token)" href="#" >
+							<span class="text-primary">[[
+								
+								${ token.userInfo != null } ? (
+									${ token.userInfo.name != null } ? 
+											${ token.userInfo.name } 
+										:
+											(${ token.userInfo.familyName != null } || ${ token.userInfo.givenName != null } || ${ token.userInfo.middleName != null } || ${ token.userInfo.nickname != null }) ? 
+													#strings.arrayJoin(new String[] {
+														(${ token.userInfo.nickname != null } ? ${ token.userInfo.nickname } : (${ token.userInfo.givenName != null } ? ${ token.userInfo.givenName } : null)),
+														(${ token.userInfo.middleName != null } ? ${ token.userInfo.middleName } : null),
+														(${ token.userInfo.familyName != null } ? ${ token.UserInfo.familyName } : null)
+													})
+												:
+													(${ token.userInfo.preferredUsername != null } ? ${ token.userInfo.preferredUsername } : ${ token.sub })
+									) : ${ token.sub }									
+							
+							 ]]</span>
+							<br>
+							<small class="text-muted">[[${ token.issuer }]]</small>
+							</a>
 						</li>
 					</ul>
 				</div>
