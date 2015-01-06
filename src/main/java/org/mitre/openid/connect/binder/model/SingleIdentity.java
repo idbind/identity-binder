@@ -85,7 +85,7 @@ public class SingleIdentity {
 	/**
 	 * @return the userInfoJsonString
 	 */
-	@Column(name = "user_info_json_string")
+	@Column(name = "user_info_json_string", length = 4096)
 	public String getUserInfoJsonString() {
 		return userInfoJsonString;
 	}
