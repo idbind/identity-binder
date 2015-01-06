@@ -3,7 +3,7 @@
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head th:replace="fragments/header :: header(title='Accounts')">
 </head>
-<body>
+<body th:inline="text">
 
 	<nav th:replace="fragments/navbar :: navbar(title='Accounts')"></nav>
 
@@ -16,20 +16,18 @@
 				<table class="table table-striped table-hover">
 					<thead>
 						<tr>
-							<th>#</th>
-							<th>Subject</th>
-							<th>Issuer</th>
-							<th>First Used</th>
-							<th>Last Used</th>
+							<th>Online</th>
+							<th>Profile</th>
+							<th>Activity</th>
+							<th>Actions</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="account,iter : ${accounts}">
-							<td th:text="${iter.count}"></td>
-							<td th:text="${account.subject}"></td>
+							<td>[[ ${ authentication.containsIssSubPair(account.issuer, account.sub) } ]]</td>
 							<td th:text="${account.issuer}"></td>
-							<td th:text="${account.firstUsed}"></td>
-							<td th:text="${account.lastUsed}"></td>
+							<td th:text="${ beans.prettyTime.format(account.firstUsed) }"></td>
+							<td th:text="${ beans.prettyTime.format(account.lastUsed) }"></td>
 						</tr>
 					</tbody>
 				</table>

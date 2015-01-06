@@ -77,5 +77,18 @@ public class MultipleIdentityAuthentication extends AbstractAuthenticationToken 
 	public Set<OIDCAuthenticationToken> getTokens() {
 		return this.tokens;
 	}
+	
+	/**
+	 * Determines whether or not a given subject/issuer pair is currently logged in (part of this authentication token).
+	 */
+	public boolean containsIssSubPair(String issuer, String subject) {
+		for (OIDCAuthenticationToken token : getTokens()) {
+			if (token.getIssuer().equals(issuer) && token.getSub().equals(subject)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 
 }
