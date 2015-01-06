@@ -1,10 +1,13 @@
 package org.mitre.openid.connect.binder.authentication;
 
+import java.util.Collections;
 import java.util.Set;
 
 import org.mitre.openid.connect.binder.service.IdentityService;
 import org.mitre.openid.connect.client.NamedAdminAuthoritiesMapper;
+import org.mitre.openid.connect.client.UserInfoFetcher;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
+import org.mitre.openid.connect.model.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -22,6 +25,8 @@ public class MultipleIdentityAuthenticationProvider implements AuthenticationPro
 	
 	private GrantedAuthoritiesMapper authoritiesMapper = new NamedAdminAuthoritiesMapper();
 	
+	private UserInfoFetcher userInfoFetcher = new UserInfoFetcher(); 
+	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
@@ -38,7 +43,15 @@ public class MultipleIdentityAuthenticationProvider implements AuthenticationPro
 
 		} else if (authentication instanceof OIDCAuthenticationToken) {
 
-			OIDCAuthenticationToken newToken = (OIDCAuthenticationToken) authentication;
+			OIDCAuthenticationToken incomingToken = (OIDCAuthenticationToken) authentication;
+			
+			// TODO: intelligently cache and handle userinfo
+			UserInfo userInfo = userInfoFetcher.loadUserInfo(incomingToken);
+			
+			OIDCAuthenticationToken newToken = new OIDCAuthenticationToken(incomingToken.getSub(),
+					incomingToken.getIssuer(),
+					userInfo, Collections.EMPTY_SET,
+					incomingToken.getIdTokenValue(), incomingToken.getAccessTokenValue(), incomingToken.getRefreshTokenValue());
 			
 			identityService.saveTokenIdentity(newToken);
 
