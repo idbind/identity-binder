@@ -37,7 +37,7 @@
 						</li>
 						<li class="divider"></li>
 						<li th:each="token : ${#authentication.tokens}">
-							<span th:replace="fragments/navbar-account :: account(${token})">Account</span>
+							<a th:replace="fragments/navbar-account :: account(${token})">Account</a>
 						</li>
 					</ul>
 				</li>
