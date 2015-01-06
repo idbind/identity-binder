@@ -36,8 +36,8 @@
 							<a th:href="@{/login}">Log In</a>
 						</li>
 						<li class="divider"></li>
-						<li th:each="principal : ${#authentication.principal}">
-							<a href="#" th:text="${principal}"></a>
+						<li th:each="token : ${#authentication.tokens}">
+							<span th:replace="fragments/navbar-account :: account(${token})">Account</span>
 						</li>
 					</ul>
 				</li>
