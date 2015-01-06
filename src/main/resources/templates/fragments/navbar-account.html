@@ -19,11 +19,9 @@
 					<ul class="dropdown-menu" role="menu">
 						<li>
 							<a th:fragment="account(token)" href="#" >
-							<span class="bg-warn">[[ ${ token.userInfo } ]]</span>
+							<span class="text-primary">[[ ${ T(org.mitre.openid.connect.binder.util.UserInfoFormatter).displayName(token.userInfo) } ?: ${ token.sub } ]]</span>
 							<br>
-							<span class="text-primary">[[ ${ T(org.mitre.openid.connect.binder.util.UserInfoFormatter).format(token.userInfo) } ]]</span>
-							<br>
-							<small class="text-muted">[[${ token.issuer }]]</small>
+							<small class="text-muted">[[ (${ token.userInfo } and ${ token.userInfo.email } ) ? ${ token.userInfo.email } : ${ token.issuer }]]</small>
 							</a>
 						</li>
 					</ul>

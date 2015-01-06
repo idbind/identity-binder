@@ -10,7 +10,7 @@ import com.google.common.base.Joiner;
 public class UserInfoFormatter {
 
 	
-	public static String format(UserInfo u) {
+	public static String displayName(UserInfo u) {
 		
 		if (u == null) {
 			// if there's no userinfo, we have to punt to a higher layer
