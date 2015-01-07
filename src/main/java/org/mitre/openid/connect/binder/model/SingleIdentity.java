@@ -8,7 +8,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+
+import org.mitre.openid.connect.model.DefaultUserInfo;
+import org.mitre.openid.connect.model.UserInfo;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 /**
  * Model class for an OpenID Connect identity.
@@ -95,6 +102,15 @@ public class SingleIdentity {
 	 */
 	public void setUserInfoJsonString(String userInfoJsonString) {
 		this.userInfoJsonString = userInfoJsonString;
+	}
+	
+	/**
+	 * Helper method for getting the UserInfo as an object
+	 */
+	@Transient
+	public UserInfo getUserInfo() {
+		JsonObject obj = new Gson().fromJson(getUserInfoJsonString(), JsonObject.class);
+		return DefaultUserInfo.fromJson(obj);
 	}
 
 	/**
