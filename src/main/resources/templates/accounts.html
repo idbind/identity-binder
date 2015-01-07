@@ -24,7 +24,7 @@
 					</thead>
 					<tbody>
 						<tr th:each="account,iter : ${accounts}">
-							<td>[[ ${ authentication.containsIssSubPair(account.issuer, account.sub) } ]]</td>
+							<td>[[ ${ #authentication.containsIssSubPair(account.issuer, account.subject) } ]]</td>
 							<td th:text="${account.issuer}"></td>
 							<td th:text="${ beans.prettyTime.format(account.firstUsed) }"></td>
 							<td th:text="${ beans.prettyTime.format(account.lastUsed) }"></td>
