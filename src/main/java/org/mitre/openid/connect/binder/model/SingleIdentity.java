@@ -15,7 +15,9 @@ import org.mitre.openid.connect.model.DefaultUserInfo;
 import org.mitre.openid.connect.model.UserInfo;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 /**
  * Model class for an OpenID Connect identity.
@@ -109,10 +111,15 @@ public class SingleIdentity {
 	 */
 	@Transient
 	public UserInfo getUserInfo() {
-		JsonObject obj = new Gson().fromJson(getUserInfoJsonString(), JsonObject.class);
+		JsonObject obj = new JsonParser().parse(getUserInfoJsonString()).getAsJsonObject();
 		return DefaultUserInfo.fromJson(obj);
 	}
 
+	public void setUserInfo(UserInfo u) {
+		String s = new Gson().toJson(u.toJson());
+		setUserInfoJsonString(s);
+	}
+	
 	/**
 	 * @return the firstUsed
 	 */

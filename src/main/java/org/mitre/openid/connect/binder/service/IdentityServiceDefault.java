@@ -49,7 +49,7 @@ public class IdentityServiceDefault implements IdentityService {
 				singleIdentity.setSubject(token.getSub());
 				singleIdentity.setIssuer(token.getIssuer());
 				singleIdentity.setFirstUsed(new Date());
-				singleIdentity.setUserInfoJsonString( (token.getUserInfo() == null) ? null : token.getUserInfo().toJson().toString() ); // update user info every time
+				singleIdentity.setUserInfo(token.getUserInfo()); // update user info every time
 				singleIdentity.setLastUsed(new Date());
 			}
 			

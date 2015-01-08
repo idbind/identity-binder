@@ -24,26 +24,27 @@
 					</thead>
 					<tbody>
 						<tr th:each="account,iter : ${accounts}"
-							th:with="online=${ #authentication.containsIssSubPair(account.issuer, account.subject) }">
+							th:with="online=${ #authentication.containsIssSubPair(account.issuer, account.subject) },u=${ account.userInfo } ">
 							<td>
 								<span class="glyphicon glyphicon-ok-circle text-success" th:if ="${ online }"></span>
 								<span class="glyphicon glyphicon-remove-circle text-danger" th:unless ="${ online }"></span>							
 							</td>
 							<td class="">
-								<h3 class="text-primary">[[ ${ T(org.mitre.openid.connect.binder.util.UserInfoFormatter).displayName(account.userInfo) } ?: ${ account.subject } ]]</h3>
-								<h4>[[ (${ account.userInfo } and ${ account.userInfo.email } ) ? ${ account.userInfo.email } : '' ]]</h4>
-								<h5 class="text-muted">[[ ${ account.subject } + " @ " + ${ account.issuer } ]]</h5>
+								<h3 class="text-primary">[[ ${ T(org.mitre.openid.connect.binder.util.UserInfoFormatter).displayName(u) } ?: ${ account.subject } ]]
+									<small class="text-muted" th:if="${ u } and ${ u.preferredUsername }">([[ ${ u.preferredUsername } ]])</small>
+								</h3>
+								<h4 th:if="${ u } and ${ u.email }" th:text="${ u.email }">someone@emailaddress.com</h4>
+								<h5 class="text-muted">[[ ${ account.subject + " @ " + account.issuer } ]]</h5>
 							</td>
 							<td>
-								<i>First used:</i> <span class="text-muted">[[ ${ beans.prettyTime.format(account.firstUsed) } ]]</span>
+								<b>First used:</b> <span class="text-muted">[[ ${ beans.prettyTime.format(account.firstUsed) } ]]</span>
 								<br>
-								<i>Last used:</i> <span class="text-muted">[[ ${ beans.prettyTime.format(account.lastUsed) } ]]</span>						
+								<b>Last used:</b> <span class="text-muted">[[ ${ beans.prettyTime.format(account.lastUsed) } ]]</span>						
 							</td>
 							<td>
 								<div class="btn-group" role="group">
-									<button type="button" class="btn btn-default">Left</button>
-  									<button type="button" class="btn btn-default">Middle</button>
-									<button type="button" class="btn btn-default">Right</button>
+									<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> View Details</button>
+  									<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span> Disconnect</button>
 								</div>
 							
 							</td>
