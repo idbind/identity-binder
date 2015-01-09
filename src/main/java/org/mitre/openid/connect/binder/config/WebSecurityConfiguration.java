@@ -37,8 +37,7 @@ import com.nimbusds.jose.JWSAlgorithm;
 @Configuration
 @EnableWebMvcSecurity
 @Order(4) 
-// The EnableResourceServer annotation of OAuthProtectedResourceConfiguration uses a hard-coded Order of 3.
-// see http://docs.spring.io/spring-security/oauth/apidocs/org/springframework/security/oauth2/config/annotation/web/configuration/EnableResourceServer.html
+// The EnableResourceServer annotation of OAuthProtectedResourceConfiguration uses a WebSecurityConfigurer with hard-coded Order of 3.
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 	
 	@Override
