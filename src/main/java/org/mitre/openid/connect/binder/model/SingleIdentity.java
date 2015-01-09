@@ -14,8 +14,8 @@ import javax.persistence.UniqueConstraint;
 import org.mitre.openid.connect.model.DefaultUserInfo;
 import org.mitre.openid.connect.model.UserInfo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -50,6 +50,7 @@ public class SingleIdentity {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "id")
+	@JsonIgnore
 	public Long getId() {
 		return id;
 	}
@@ -95,6 +96,7 @@ public class SingleIdentity {
 	 * @return the userInfoJsonString
 	 */
 	@Column(name = "user_info_json_string", length = 4096)
+	@JsonIgnore
 	public String getUserInfoJsonString() {
 		return userInfoJsonString;
 	}
@@ -110,6 +112,7 @@ public class SingleIdentity {
 	 * Helper method for getting the UserInfo as an object
 	 */
 	@Transient
+	@JsonIgnore
 	public UserInfo getUserInfo() {
 		JsonObject obj = new JsonParser().parse(getUserInfoJsonString()).getAsJsonObject();
 		return DefaultUserInfo.fromJson(obj);
@@ -124,6 +127,7 @@ public class SingleIdentity {
 	 * @return the firstUsed
 	 */
 	@Column(name = "first_used")
+	@JsonIgnore
 	public Date getFirstUsed() {
 		return firstUsed;
 	}
@@ -139,6 +143,7 @@ public class SingleIdentity {
 	 * @return the lastUsed
 	 */
 	@Column(name = "last_used")
+	@JsonIgnore
 	public Date getLastUsed() {
 		return lastUsed;
 	}
