@@ -34,13 +34,15 @@ public class OAuthProtectedResourceConfiguration extends ResourceServerConfigure
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-	    http.authorizeRequests()
-	    	.antMatchers("/query**")
+	    http.antMatcher("/query**")
+	    	.authorizeRequests()
+	    		.anyRequest()
 	    		.access("#oauth2.hasScope('org.mitre.idbind.query')")
-	    		.and()
-	    	.antMatcher("/query**")
+	    	.and()
+	    		.csrf().disable()
 	    		.exceptionHandling().authenticationEntryPoint(oauth2AuthenticationEntryPoint())
-	    		.accessDeniedHandler(oauth2AccessDeniedHandler());
+	    		.accessDeniedHandler(oauth2AccessDeniedHandler())
+	    		;
 	    
 	}
 	
