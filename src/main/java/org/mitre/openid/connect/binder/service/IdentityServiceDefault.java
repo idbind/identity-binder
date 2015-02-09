@@ -159,6 +159,9 @@ public class IdentityServiceDefault implements IdentityService {
 	@Override
 	public MultipleIdentity getCurrentMultiple() {
 		
+		
+		// TODO: SRSLY?
+		
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		Set<OIDCAuthenticationToken> tokens = ((MultipleIdentityAuthentication) authN).getTokens();
 		Iterator<OIDCAuthenticationToken> iter = tokens.iterator();

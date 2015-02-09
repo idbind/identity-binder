@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:replace="fragments/header :: header(title='Accounts')">
+</head>
+<body th:inline="text">
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+
+				<div th:fragment="account-tile(u, account)" class="account-tile">
+								<h3 class="text-primary">[[ ${ T(org.mitre.openid.connect.binder.util.UserInfoFormatter).displayName(u) } ?: ${ account.subject } ]]
+									<small class="text-muted" th:if="${ u } and ${ u.preferredUsername }">([[ ${ u.preferredUsername } ]])</small>
+								</h3>
+								<h4 th:if="${ u } and ${ u.email }" th:text="${ u.email }">someone@emailaddress.com</h4>
+								<h5 class="text-muted">[[ ${ account.subject + " @ " + account.issuer } ]]</h5>
+				</div>
+				<!-- end page content -->
+
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

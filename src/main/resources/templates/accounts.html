@@ -30,11 +30,9 @@
 								<span class="glyphicon glyphicon-remove-circle text-danger" th:unless ="${ online }"></span>							
 							</td>
 							<td class="">
-								<h3 class="text-primary">[[ ${ T(org.mitre.openid.connect.binder.util.UserInfoFormatter).displayName(u) } ?: ${ account.subject } ]]
-									<small class="text-muted" th:if="${ u } and ${ u.preferredUsername }">([[ ${ u.preferredUsername } ]])</small>
-								</h3>
-								<h4 th:if="${ u } and ${ u.email }" th:text="${ u.email }">someone@emailaddress.com</h4>
-								<h5 class="text-muted">[[ ${ account.subject + " @ " + account.issuer } ]]</h5>
+								<div th:replace="fragments/account-tile :: account-tile(${u}, ${account})">
+								
+								</div>
 							</td>
 							<td>
 								<b>First used:</b> <span class="text-muted">[[ ${ beans.prettyTime.format(account.firstUsed) } ]]</span>

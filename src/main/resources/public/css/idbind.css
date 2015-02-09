@@ -1,4 +1,11 @@
-
+.account-tile h1,
+.account-tile h2,
+.account-tile h3,
+.account-tile h4,
+.account-tile h5 {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
 
 .long-button {
 	width: 200px;
