@@ -36,6 +36,9 @@ public class IdentityServiceDefault implements IdentityService {
 	@Autowired
 	private MultipleIdentityRepository multipleIdentityRepository;
 
+	/**
+	 * This merge requires active login of all merging identities.
+	 */
 	@Override
 	public MultipleIdentity merge() throws AuthenticationNotSupportedException {
 
