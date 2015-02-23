@@ -37,7 +37,7 @@ public class IdentityServiceDefault implements IdentityService {
 	private MultipleIdentityRepository multipleIdentityRepository;
 
 	/**
-	 * This merge requires active login of all merging identities.
+	 * This merge also binds any identities that were previously binded to the actively logged in identities.
 	 */
 	@Override
 	public MultipleIdentity merge() throws AuthenticationNotSupportedException {
@@ -56,9 +56,10 @@ public class IdentityServiceDefault implements IdentityService {
 				singleIdentity.setLastUsed(new Date());
 			}
 			
-			// delete old multiple identity
+			// find and bind previously binded identities and delete old multiple identity
 			MultipleIdentity oldMultiple = getMultipleBySubjectIssuer(token.getSub(), token.getIssuer());
 			if (oldMultiple != null) {
+				identities.addAll(oldMultiple.getIdentities());
 				multipleIdentityRepository.delete(oldMultiple);
 			}
 			
