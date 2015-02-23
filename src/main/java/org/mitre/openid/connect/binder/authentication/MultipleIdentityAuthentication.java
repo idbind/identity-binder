@@ -9,15 +9,17 @@ import org.mitre.openid.connect.model.OIDCAuthenticationToken;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
-import scala.annotation.meta.getter;
-
 import com.google.common.collect.ImmutableSet;
 
 public class MultipleIdentityAuthentication extends AbstractAuthenticationToken {
 
 	private static final long serialVersionUID = -134174160460176972L;
 
+	// collection of all tokens in the current authentication context
 	private final Set<OIDCAuthenticationToken> tokens;
+	
+	// the latest token to come in (may not be merged yet)
+	private final OIDCAuthenticationToken newToken;
 	
 	private final Set<Map<String, String>> principal;
 
@@ -33,6 +35,7 @@ public class MultipleIdentityAuthentication extends AbstractAuthenticationToken 
 
 		setAuthenticated(true);
 		tokens = ImmutableSet.of(token);
+		newToken = token;
 		principal = ImmutableSet.of((Map<String, String>)token.getPrincipal());
 		
 	}
@@ -43,13 +46,14 @@ public class MultipleIdentityAuthentication extends AbstractAuthenticationToken 
 	 * @param authorities
 	 * @param tokens
 	 */
-	public MultipleIdentityAuthentication(Collection<? extends GrantedAuthority> authorities, Set<OIDCAuthenticationToken> tokens) {
+	public MultipleIdentityAuthentication(Collection<? extends GrantedAuthority> authorities, Set<OIDCAuthenticationToken> tokens, OIDCAuthenticationToken newToken) {
 
 		super(authorities);
 
 		setAuthenticated(true);
 		this.tokens = ImmutableSet.copyOf(tokens);
-
+		this.newToken = newToken;
+		
 		Set<Map<String, String>> p = new HashSet<Map<String,String>>();
 		for (OIDCAuthenticationToken token : tokens) {
 			p.add((Map<String, String>) token.getPrincipal());
@@ -76,6 +80,10 @@ public class MultipleIdentityAuthentication extends AbstractAuthenticationToken 
 	 */
 	public Set<OIDCAuthenticationToken> getTokens() {
 		return this.tokens;
+	}
+	
+	public OIDCAuthenticationToken getNewToken() {
+		return this.newToken;
 	}
 	
 	/**

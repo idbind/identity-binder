@@ -185,6 +185,23 @@ public class IdentityServiceDefault implements IdentityService {
 		MultipleIdentityAuthentication multiAuth = (MultipleIdentityAuthentication) authN;
 		return multiAuth.getTokens();
 	}
+	
+	/**
+	 * Gets the latest token from the current Security Context.
+	 * 
+	 * @return
+	 * @throws AuthenticationNotSupportedException
+	 */
+	private OIDCAuthenticationToken getNewToken() throws AuthenticationNotSupportedException {
+		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
+		
+		if ( !(authN instanceof MultipleIdentityAuthentication) ) {
+			throw new AuthenticationNotSupportedException("Authentication needs to be of type MultipleIdentityAuthentication but was: " + authN.getClass() + ".");
+		}
+		
+		MultipleIdentityAuthentication multiAuth = (MultipleIdentityAuthentication) authN;
+		return multiAuth.getNewToken();
+	}
 
 	@Override
 	public Set<SingleIdentity> getAllIdentities() {
