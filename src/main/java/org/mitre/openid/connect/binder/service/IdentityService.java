@@ -94,6 +94,26 @@ public interface IdentityService {
 	public MultipleIdentity getCurrentMultiple();
 	
 	/**
+	 * Gets the Multiple Identity associated with the current multiple, 
+	 * without the latest token. If the latest token was already binded, 
+	 * then this will return the same result as getCurrentMultiple().
+	 * 
+	 * If there was only one token to begin with, this will return null.
+	 * 
+	 * @return
+	 */
+	public MultipleIdentity getPreexistingMultiple();
+	
+	/**
+	 * Checks the Security Context and fetches the new Multiple Identity object.
+	 * 
+	 * This multiple may or may not be already bound to the current Multiple Identity.
+	 * 
+	 * @return
+	 */
+	public MultipleIdentity getNewMultiple();
+	
+	/**
 	 * Returns all identities known to this service.
 	 * @return
 	 */

@@ -5,7 +5,6 @@ package org.mitre.openid.connect.binder.service;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import javax.naming.AuthenticationNotSupportedException;
@@ -21,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
 /**
@@ -160,11 +160,12 @@ public class IdentityServiceDefault implements IdentityService {
 		
 		Authentication authN = SecurityContextHolder.getContext().getAuthentication();
 		Set<OIDCAuthenticationToken> tokens = ((MultipleIdentityAuthentication) authN).getTokens();
-		Iterator<OIDCAuthenticationToken> iter = tokens.iterator();
-		if (!iter.hasNext()) {
+		
+		OIDCAuthenticationToken token = Iterables.getFirst(tokens, null);
+		
+		if (token == null) {
 			throw new IllegalStateException("OIDC Authentication must be present.");
 		}
-		OIDCAuthenticationToken token = iter.next();
 		
 		return getMultipleBySubjectIssuer(token.getSub(), token.getIssuer());
 	}
@@ -202,12 +203,48 @@ public class IdentityServiceDefault implements IdentityService {
 		MultipleIdentityAuthentication multiAuth = (MultipleIdentityAuthentication) authN;
 		return multiAuth.getNewToken();
 	}
+	
+
+	@Override
+	public MultipleIdentity getPreexistingMultiple() {
+		Set<OIDCAuthenticationToken> tokens = Sets.newHashSet();
+				
+		try {
+			tokens = Sets.newHashSet(getCurrentTokens());
+			tokens.remove(getNewToken());
+		} catch (AuthenticationNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if (tokens.isEmpty()) {
+			return null;
+		} else {
+			OIDCAuthenticationToken token = Iterables.getFirst(tokens, null);
+			
+			return getMultipleBySubjectIssuer(token.getSub(), token.getIssuer());
+		}
+		
+	}
+
+	@Override
+	public MultipleIdentity getNewMultiple() {
+		
+		OIDCAuthenticationToken token = null;
+		
+		try {
+			token = getNewToken();
+		} catch (AuthenticationNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return token == null ? null : getMultipleBySubjectIssuer(token.getSub(), token.getIssuer());
+	}
 
 	@Override
 	public Set<SingleIdentity> getAllIdentities() {
 		return Sets.newHashSet(singleIdentityRepository.findAll());
 	}
-	
-	
 
 }
