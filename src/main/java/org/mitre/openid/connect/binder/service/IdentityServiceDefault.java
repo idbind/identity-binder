@@ -45,16 +45,6 @@ public class IdentityServiceDefault implements IdentityService {
 		MultipleIdentity multipleIdentity = new MultipleIdentity();
 		Set<SingleIdentity> identities = new HashSet<SingleIdentity>();
 		for (OIDCAuthenticationToken token : getCurrentTokens()) {
-			SingleIdentity singleIdentity = getSingleBySubjectIssuer(token.getSub(), token.getIssuer());
-			
-			if (singleIdentity == null) {
-				singleIdentity = new SingleIdentity();
-				singleIdentity.setSubject(token.getSub());
-				singleIdentity.setIssuer(token.getIssuer());
-				singleIdentity.setFirstUsed(new Date());
-				singleIdentity.setUserInfo(token.getUserInfo()); // update user info every time
-				singleIdentity.setLastUsed(new Date());
-			}
 			
 			// find and bind previously binded identities and delete old multiple identity
 			MultipleIdentity oldMultiple = getMultipleBySubjectIssuer(token.getSub(), token.getIssuer());
@@ -62,6 +52,8 @@ public class IdentityServiceDefault implements IdentityService {
 				identities.addAll(oldMultiple.getIdentities());
 				multipleIdentityRepository.delete(oldMultiple);
 			}
+			
+			SingleIdentity singleIdentity = convertTokenIdentity(token);
 			
 			// add to new one
 			identities.add(singleIdentity);
@@ -143,7 +135,7 @@ public class IdentityServiceDefault implements IdentityService {
 	}
 	
 	@Override
-	public SingleIdentity saveTokenIdentity(OIDCAuthenticationToken token) {
+	public SingleIdentity convertTokenIdentity(OIDCAuthenticationToken token) {
 		
 		SingleIdentity singleIdentity = getSingleBySubjectIssuer(token.getSub(), token.getIssuer());
 		
@@ -157,7 +149,7 @@ public class IdentityServiceDefault implements IdentityService {
 		
 		singleIdentity.setUserInfoJsonString( (token.getUserInfo() == null) ? null : token.getUserInfo().toJson().toString() ); // update user info every time
 		singleIdentity.setLastUsed(new Date());
-		return saveSingleIdentity(singleIdentity);
+		return singleIdentity;
 	}
 
 	@Override
@@ -178,7 +170,8 @@ public class IdentityServiceDefault implements IdentityService {
 	}
 
 	/**
-	 * Gets the OIDC Tokens from the current Security Context.
+	 * Gets all the OIDC Tokens from the current Security Context. 
+	 * 
 	 * @return
 	 * @throws AuthenticationNotSupportedException 
 	 */

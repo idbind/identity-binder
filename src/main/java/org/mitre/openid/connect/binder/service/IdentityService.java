@@ -79,12 +79,12 @@ public interface IdentityService {
 	public MultipleIdentity saveMultipleIdentity(MultipleIdentity multipleIdentity);
 
 	/**
-	 * Saves a single identity object using the given id token.
+	 * Converts an OIDC Authentication Token into a Single Identity.
 	 * 
 	 * @param token
 	 * @return
 	 */
-	public SingleIdentity saveTokenIdentity(OIDCAuthenticationToken token);
+	public SingleIdentity convertTokenIdentity(OIDCAuthenticationToken token);
 	
 	/**
 	 * Checks the Security Context and fetches the current Multiple Identity object.

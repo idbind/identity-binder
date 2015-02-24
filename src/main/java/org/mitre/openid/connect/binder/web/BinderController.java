@@ -1,7 +1,10 @@
 package org.mitre.openid.connect.binder.web;
 
+import java.util.Collections;
+
 import javax.naming.AuthenticationNotSupportedException;
 
+import org.mitre.openid.connect.binder.model.MultipleIdentity;
 import org.mitre.openid.connect.binder.service.IdentityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,7 +38,11 @@ public class BinderController {
 	
 	@RequestMapping(value = "/merge", method = RequestMethod.GET)
 	public ModelAndView mergeView() {
-		return new ModelAndView("merge");
+		ModelAndView mav = new ModelAndView("merge");
+		
+		MultipleIdentity currentMultiple = identityService.getCurrentMultiple();
+		mav.addObject("bindedIdentities", currentMultiple == null ? Collections.EMPTY_SET : currentMultiple.getIdentities());
+		return mav;
 	}
 	
 	@RequestMapping(value = "/accounts", method = RequestMethod.GET)

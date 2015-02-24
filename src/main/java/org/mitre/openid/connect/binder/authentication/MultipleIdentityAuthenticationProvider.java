@@ -3,12 +3,10 @@ package org.mitre.openid.connect.binder.authentication;
 import java.util.Collections;
 import java.util.Set;
 
-import org.mitre.openid.connect.binder.service.IdentityService;
 import org.mitre.openid.connect.client.NamedAdminAuthoritiesMapper;
 import org.mitre.openid.connect.client.UserInfoFetcher;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
 import org.mitre.openid.connect.model.UserInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -19,9 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import com.google.common.collect.Sets;
 
 public class MultipleIdentityAuthenticationProvider implements AuthenticationProvider {
-
-	@Autowired
-	private IdentityService identityService;
 	
 	private GrantedAuthoritiesMapper authoritiesMapper = new NamedAdminAuthoritiesMapper();
 	
@@ -52,8 +47,6 @@ public class MultipleIdentityAuthenticationProvider implements AuthenticationPro
 					incomingToken.getIssuer(),
 					userInfo, Collections.EMPTY_SET,
 					incomingToken.getIdTokenValue(), incomingToken.getAccessTokenValue(), incomingToken.getRefreshTokenValue());
-			
-			identityService.saveTokenIdentity(newToken);
 
 			// check for existing multi-authentication context
 			Authentication preexistingAuthentication = SecurityContextHolder.getContext().getAuthentication();
@@ -86,14 +79,6 @@ public class MultipleIdentityAuthenticationProvider implements AuthenticationPro
 	public boolean supports(Class<?> authentication) {
 		return MultipleIdentityAuthentication.class.isAssignableFrom(authentication)
 				|| OIDCAuthenticationToken.class.isAssignableFrom(authentication);
-	}
-
-	public IdentityService getIdentityService() {
-		return identityService;
-	}
-
-	public void setIdentityService(IdentityService identityService) {
-		this.identityService = identityService;
 	}
 
 	public GrantedAuthoritiesMapper getAuthoritiesMapper() {
