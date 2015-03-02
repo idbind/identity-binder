@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.mitre.jose.keystore.JWKSetKeyStore;
-import org.mitre.jwt.signer.service.impl.DefaultJwtSigningAndValidationService;
+import org.mitre.jwt.signer.service.impl.DefaultJWTSigningAndValidationService;
 import org.mitre.jwt.signer.service.impl.JWKSetCacheService;
 import org.mitre.oauth2.model.RegisteredClient;
 import org.mitre.oauth2.model.ClientDetailsEntity.AuthMethod;
@@ -176,11 +176,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 	}
 	
 	@Bean
-	public DefaultJwtSigningAndValidationService defaultSignerService() throws Exception {
+	public DefaultJWTSigningAndValidationService defaultSignerService() throws Exception {
 		JWKSetKeyStore defaultKeyStore = new JWKSetKeyStore();
 		defaultKeyStore.setLocation(new ClassPathResource("keystore.jwks"));
 		
-		DefaultJwtSigningAndValidationService signerService = new DefaultJwtSigningAndValidationService(defaultKeyStore);
+		DefaultJWTSigningAndValidationService signerService = new DefaultJWTSigningAndValidationService(defaultKeyStore);
 		signerService.setDefaultSignerKeyId("rsa1");
 		signerService.setDefaultSigningAlgorithmName("RS256");
 		
