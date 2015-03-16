@@ -40,8 +40,12 @@ public class BinderController {
 	public ModelAndView mergeView() {
 		ModelAndView mav = new ModelAndView("merge");
 		
-		MultipleIdentity currentMultiple = identityService.getCurrentMultiple();
-		mav.addObject("bindedIdentities", currentMultiple == null ? Collections.EMPTY_SET : currentMultiple.getIdentities());
+		MultipleIdentity preexistingMultiple = identityService.getPreexistingMultiple();
+		mav.addObject("binded", preexistingMultiple == null ? Collections.EMPTY_SET : preexistingMultiple.getIdentities());
+		
+		MultipleIdentity newMultiple = identityService.getNewMultiple();
+		mav.addObject("unbinded", newMultiple == null ? Collections.EMPTY_SET : newMultiple.getIdentities());
+		
 		return mav;
 	}
 	

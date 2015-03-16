@@ -52,6 +52,10 @@ public class ConsistencyServiceDefault implements ConsistencyService {
 			
 			// if any subject/issuer is not known to the system, then it is not bound yet so return early here
 			if (multiple == null) {
+				MultipleIdentity newMultiple = new MultipleIdentity();
+				SingleIdentity single = identityService.convertTokenIdentity(token);
+				newMultiple.setIdentities(Sets.newHashSet(single));
+				identityService.saveMultipleIdentity(newMultiple);
 				return false;
 			}
 			

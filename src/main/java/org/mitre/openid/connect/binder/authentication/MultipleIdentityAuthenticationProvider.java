@@ -64,7 +64,7 @@ public class MultipleIdentityAuthenticationProvider implements AuthenticationPro
 				authorities.addAll(newToken.getAuthorities());
 
 
-				return new MultipleIdentityAuthentication(authoritiesMapper.mapAuthorities(authorities), tokens);
+				return new MultipleIdentityAuthentication(authoritiesMapper.mapAuthorities(authorities), tokens, newToken);
 
 			} else { // make a new multi-auth object with this OIDC token
 				
