@@ -52,7 +52,7 @@ public class MultipleIdentityAuthenticationConsistencyFilter extends
 			MultipleIdentityAuthentication multiAuth = (MultipleIdentityAuthentication) authentication;
 
 			if (((HttpServletRequest) request).getServletPath().equals(
-					"/merge")
+					"/bind")
 					|| multiAuth.getTokens() == null
 					|| multiAuth.getTokens().size() == 0
 					|| consistencyService.isConsistent(multiAuth.getTokens())) {
@@ -60,8 +60,8 @@ public class MultipleIdentityAuthenticationConsistencyFilter extends
 				// pass the request along the filter chain
 				chain.doFilter(request, response);
 
-			} else { // forward to merge page to resolve identity inconsistency
-				((HttpServletResponse) response).sendRedirect("merge");
+			} else { // forward to bind page to resolve identity inconsistency
+				((HttpServletResponse) response).sendRedirect("bind");
 			}
 		}
 	}

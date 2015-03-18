@@ -37,10 +37,10 @@ public class IdentityServiceDefault implements IdentityService {
 	private MultipleIdentityRepository multipleIdentityRepository;
 
 	/**
-	 * This merge also binds any identities that were previously binded to the actively logged in identities.
+	 * This bind also binds any identities that were previously binded to the actively logged in identities.
 	 */
 	@Override
-	public MultipleIdentity merge() throws AuthenticationNotSupportedException {
+	public MultipleIdentity bind() throws AuthenticationNotSupportedException {
 
 		MultipleIdentity multipleIdentity = new MultipleIdentity();
 		Set<SingleIdentity> identities = new HashSet<SingleIdentity>();

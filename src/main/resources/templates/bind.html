@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<head th:replace="fragments/header :: header(title='Merge')">
+<head th:replace="fragments/header :: header(title='Bind')">
 </head>
 <body th:inline="text">
 
-	<nav th:replace="fragments/navbar :: navbar(title='Merge')"></nav>
+	<nav th:replace="fragments/navbar :: navbar(title='Bind')"></nav>
 
 	<div class="container-fluid">
 		<div class="row-fluid">
@@ -15,7 +15,7 @@
 
 				<div class="panel panel-primary">
 					<div class="panel-heading">
-						<h3 class="panel-title">Merge these accounts?</h3>
+						<h3 class="panel-title">Bind these accounts?</h3>
 					</div>
 					<div class="panel-body">Are you sure you want to combine these identities into a single MPN profile? Enabled
 						MPN applications will be able to correlate between these different accounts. You may still need to log in with a
@@ -33,7 +33,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="account,iter : ${binded}" th:with="u=${ account.userInfo } ">
+								<tr th:each="account,iter : ${bound}" th:with="u=${ account.userInfo } ">
 									<td class="">
 										<div th:replace="fragments/account-tile :: account-tile(${u}, ${account})"></div>
 									</td>
@@ -50,7 +50,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr th:each="account,iter : ${unbinded}" th:with="u=${ account.userInfo } ">
+								<tr th:each="account,iter : ${unbound}" th:with="u=${ account.userInfo } ">
 									<td class="">
 										<div th:replace="fragments/account-tile :: account-tile(${u}, ${account})"></div>
 									</td>
@@ -69,8 +69,8 @@
 
 		<div class="row-fluid">
 			<div class="col-md-2 col-md-offset-4">
-				<form class="text-center" th:action="@{/merge}" method="post">
-					<input class="btn btn-success" type="submit" value="Merge Accounts" />
+				<form class="text-center" th:action="@{/bind}" method="post">
+					<input class="btn btn-success" type="submit" value="Bind Accounts" />
 				</form>
 			</div>
 			<div class="col-md-2">

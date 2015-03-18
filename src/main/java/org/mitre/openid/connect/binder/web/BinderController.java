@@ -20,13 +20,13 @@ public class BinderController {
 	@Autowired
 	private IdentityService identityService;
 	
-	@RequestMapping(value = "/merge", method = RequestMethod.POST)
+	@RequestMapping(value = "/bind", method = RequestMethod.POST)
 	public ModelAndView bind() {
 		ModelAndView mv = new ModelAndView("redirect:accounts");
 		
 		try {
 			
-			identityService.merge();
+			identityService.bind();
 			
 		} catch (AuthenticationNotSupportedException e) {
 			// TODO Auto-generated catch block
@@ -36,15 +36,15 @@ public class BinderController {
 		return mv;
 	}
 	
-	@RequestMapping(value = "/merge", method = RequestMethod.GET)
-	public ModelAndView mergeView() {
-		ModelAndView mav = new ModelAndView("merge");
+	@RequestMapping(value = "/bind", method = RequestMethod.GET)
+	public ModelAndView bindView() {
+		ModelAndView mav = new ModelAndView("bind");
 		
 		MultipleIdentity preexistingMultiple = identityService.getPreexistingMultiple();
-		mav.addObject("binded", preexistingMultiple == null ? Collections.EMPTY_SET : preexistingMultiple.getIdentities());
+		mav.addObject("bound", preexistingMultiple == null ? Collections.EMPTY_SET : preexistingMultiple.getIdentities());
 		
 		MultipleIdentity newMultiple = identityService.getNewMultiple();
-		mav.addObject("unbinded", newMultiple == null ? Collections.EMPTY_SET : newMultiple.getIdentities());
+		mav.addObject("unbound", newMultiple == null ? Collections.EMPTY_SET : newMultiple.getIdentities());
 		
 		return mav;
 	}

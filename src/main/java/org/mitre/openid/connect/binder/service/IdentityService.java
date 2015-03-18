@@ -16,13 +16,13 @@ import org.mitre.openid.connect.model.OIDCAuthenticationToken;
 public interface IdentityService {
 	
 	/**
-	 * Merges a set of identities into a single new set of identities. 
+	 * Binds a set of identities into a single new set of identities. 
 	 * Identities are based on OIDC Tokens from the current Security Context.
 	 * 
 	 * @return
 	 * @throws AuthenticationNotSupportedException 
 	 */
-	public MultipleIdentity merge() throws AuthenticationNotSupportedException;
+	public MultipleIdentity bind() throws AuthenticationNotSupportedException;
 	
 	/**
 	 * Unbinds the given single identity from the given multiple identity object. Does nothing if the multiple

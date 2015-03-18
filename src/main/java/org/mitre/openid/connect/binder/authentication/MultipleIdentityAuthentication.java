@@ -18,7 +18,7 @@ public class MultipleIdentityAuthentication extends AbstractAuthenticationToken 
 	// collection of all tokens in the current authentication context
 	private final Set<OIDCAuthenticationToken> tokens;
 	
-	// the latest token to come in (may not be merged yet)
+	// the latest token to come in (may not be bound yet)
 	private final OIDCAuthenticationToken newToken;
 	
 	private final Set<Map<String, String>> principal;
