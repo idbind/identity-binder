@@ -1,9 +1,11 @@
 package org.mitre.openid.connect.binder.authentication;
 
+import java.text.ParseException;
 import java.util.Collections;
 import java.util.Set;
 
 import org.mitre.openid.connect.client.NamedAdminAuthoritiesMapper;
+import org.mitre.openid.connect.client.OIDCAuthoritiesMapper;
 import org.mitre.openid.connect.client.UserInfoFetcher;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
 import org.mitre.openid.connect.model.UserInfo;
@@ -15,10 +17,12 @@ import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMap
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.google.common.collect.Sets;
+import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTParser;
 
 public class MultipleIdentityAuthenticationProvider implements AuthenticationProvider {
 	
-	private GrantedAuthoritiesMapper authoritiesMapper = new NamedAdminAuthoritiesMapper();
+	private OIDCAuthoritiesMapper authoritiesMapper = new NamedAdminAuthoritiesMapper();
 	
 	private UserInfoFetcher userInfoFetcher = new UserInfoFetcher(); 
 	
@@ -47,6 +51,14 @@ public class MultipleIdentityAuthenticationProvider implements AuthenticationPro
 					incomingToken.getIssuer(),
 					userInfo, Collections.EMPTY_SET,
 					incomingToken.getIdTokenValue(), incomingToken.getAccessTokenValue(), incomingToken.getRefreshTokenValue());
+			
+			JWT idToken = null;
+			try {
+				idToken = JWTParser.parse( newToken.getIdTokenValue() );
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			// check for existing multi-authentication context
 			Authentication preexistingAuthentication = SecurityContextHolder.getContext().getAuthentication();
@@ -64,11 +76,13 @@ public class MultipleIdentityAuthenticationProvider implements AuthenticationPro
 				authorities.addAll(newToken.getAuthorities());
 
 
-				return new MultipleIdentityAuthentication(authoritiesMapper.mapAuthorities(authorities), tokens, newToken);
+				return new MultipleIdentityAuthentication(authoritiesMapper.mapAuthorities(idToken, userInfo), tokens, newToken);
+				
+				//return new MultipleIdentityAuthentication(authoritiesMapper.mapAuthorities(idToken, userInfo), tokens, newToken);
 
 			} else { // make a new multi-auth object with this OIDC token
 				
-				return new MultipleIdentityAuthentication(authoritiesMapper.mapAuthorities(newToken.getAuthorities()), newToken);
+				return new MultipleIdentityAuthentication(authoritiesMapper.mapAuthorities(idToken, userInfo), newToken);
 			}
 		}
 
@@ -81,11 +95,11 @@ public class MultipleIdentityAuthenticationProvider implements AuthenticationPro
 				|| OIDCAuthenticationToken.class.isAssignableFrom(authentication);
 	}
 
-	public GrantedAuthoritiesMapper getAuthoritiesMapper() {
+	public OIDCAuthoritiesMapper getAuthoritiesMapper() {
 		return authoritiesMapper;
 	}
 
-	public void setAuthoritiesMapper(GrantedAuthoritiesMapper authoritiesMapper) {
+	public void setAuthoritiesMapper(OIDCAuthoritiesMapper authoritiesMapper) {
 		this.authoritiesMapper = authoritiesMapper;
 	}
 

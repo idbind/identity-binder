@@ -77,7 +77,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 		filter.setAuthenticationManager(authenticationManager());
 		
 		filter.setIssuerService(hybridIssuerService());
-		filter.setClientConfigurationService(staticClientConfigurationService());
+		filter.setClientConfigurationService(dynamicClientConfigurationService());
 		filter.setServerConfigurationService(dynamicServerConfigurationService());
 		filter.setAuthRequestOptionsService(staticAuthRequestOptionsService());
 		filter.setAuthRequestUrlBuilder(plainAuthRequestUrlBuilder());
