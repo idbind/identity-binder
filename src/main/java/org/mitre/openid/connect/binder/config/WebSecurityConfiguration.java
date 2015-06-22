@@ -43,38 +43,45 @@ import com.nimbusds.jose.JWSAlgorithm;
 // The EnableResourceServer annotation of OAuthProtectedResourceConfiguration uses a WebSecurityConfigurer with hard-coded Order of 3.
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 	
+	@Value( "${authentication.entryPoint}" )
+	private String authEntryPoint;
+	
+	@Value( "${issuerService.loginUrl}" )
+	private String issuerLoginUrl;
+	
 	@Value( "${staticClient.id}" )
 	private String staticId;
-	
 	@Value( "${staticClient.secret}" )
 	private String staticSecret;
-	
 	@Value( "${staticClient.name}" )
 	private String staticName;
-	
 	@Value( "#{'${staticClient.scope}'.split(',')}" )
 	private List<String> staticScope;
-	
 	@Value( "#{'${staticClient.redirectUris}'.split(',')}" )
 	private List<String> staticRedirects;
-	
 	@Value( "${staticClient.jwksUri}" )
 	private String staticJwks;
-	
 	@Value( "${staticClient.introspection}" )
 	private String staticInstrospection;
 	
+	@Value( "${client1.uri}" )
+	private String client1;
+	@Value( "${client2.uri}" )
+	private String client2;
+	
 	@Value( "${dynamicClient.name}" )
 	private String dynamicName;
-	
 	@Value( "#{'${dynamicClient.scope}'.split(',')}" )
 	private List<String> dynamicScope;
-	
 	@Value( "#{'${dynamicClient.redirectUris}'.split(',')}" )
 	private List<String> dynamicRedirects;
-	
 	@Value( "${dynamicClient.jwksUri}" )
 	private String dynamicJwks;
+	
+	@Value( "${signerService.defaultId" )
+	private String defaultSignerId;
+	@Value( "${signerService.defaultAlgorithm}" )
+	private String defaultAlgorithm;
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -89,7 +96,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 				.addFilterBefore(openIdConnectAuthenticationFilter(), AbstractPreAuthenticatedProcessingFilter.class)
 				.addFilterBefore(multipleIdentityAuthenticationConsistencyFilter(), OIDCAuthenticationFilter.class);
 	}
-	
 	
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -107,7 +113,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 	
     @Bean
     public LoginUrlAuthenticationEntryPoint authenticationEntryPoint() {
-    	return new LoginUrlAuthenticationEntryPoint("/openid_connect_login");
+    	return new LoginUrlAuthenticationEntryPoint(authEntryPoint);
     }
     
     @Bean
@@ -140,7 +146,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 	@Bean
 	public HybridIssuerService hybridIssuerService() {
 		HybridIssuerService issuerService = new HybridIssuerService();
-		issuerService.setLoginPageUrl("login");
+		issuerService.setLoginPageUrl(issuerLoginUrl);
 		return issuerService;
 	}
 	
@@ -165,8 +171,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 		client.setAllowIntrospection(Boolean.parseBoolean(staticInstrospection));
 		
 		Map<String, RegisteredClient> clients = new HashMap<String, RegisteredClient>();
-		clients.put("http://localhost:8080/openid-connect-server-webapp/", client);
-		clients.put("http://localhost:8080/my-openid-connect-server/", client);
+		clients.put(client1, client);
+		clients.put(client2, client);
 		clientConfigurationService.setClients(clients);
 		
 		/*
@@ -226,8 +232,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 		defaultKeyStore.setLocation(new ClassPathResource("keystore.jwks"));
 		
 		DefaultJWTSigningAndValidationService signerService = new DefaultJWTSigningAndValidationService(defaultKeyStore);
-		signerService.setDefaultSignerKeyId("rsa1");
-		signerService.setDefaultSigningAlgorithmName("RS256");
+		signerService.setDefaultSignerKeyId(defaultSignerId);
+		signerService.setDefaultSigningAlgorithmName(defaultAlgorithm);
 		
 		return signerService;
 	}
