@@ -1,6 +1,7 @@
 package org.mitre.openid.connect.binder.config;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.mitre.jose.keystore.JWKSetKeyStore;
@@ -20,6 +21,8 @@ import org.mitre.openid.connect.client.service.impl.JsonFileRegisteredClientServ
 import org.mitre.openid.connect.client.service.impl.PlainAuthRequestUrlBuilder;
 import org.mitre.openid.connect.client.service.impl.StaticAuthRequestOptionsService;
 import org.mitre.openid.connect.client.service.impl.StaticClientConfigurationService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -40,6 +43,39 @@ import com.nimbusds.jose.JWSAlgorithm;
 // The EnableResourceServer annotation of OAuthProtectedResourceConfiguration uses a WebSecurityConfigurer with hard-coded Order of 3.
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 	
+	@Value( "${staticClient.id}" )
+	private String staticId;
+	
+	@Value( "${staticClient.secret}" )
+	private String staticSecret;
+	
+	@Value( "${staticClient.name}" )
+	private String staticName;
+	
+	@Value( "#{'${staticClient.scope}'.split(',')}" )
+	private List<String> staticScope;
+	
+	@Value( "#{'${staticClient.redirectUris}'.split(',')}" )
+	private List<String> staticRedirects;
+	
+	@Value( "${staticClient.jwksUri}" )
+	private String staticJwks;
+	
+	@Value( "${staticClient.introspection}" )
+	private String staticInstrospection;
+	
+	@Value( "${dynamicClient.name}" )
+	private String dynamicName;
+	
+	@Value( "#{'${dynamicClient.scope}'.split(',')}" )
+	private List<String> dynamicScope;
+	
+	@Value( "#{'${dynamicClient.redirectUris}'.split(',')}" )
+	private List<String> dynamicRedirects;
+	
+	@Value( "${dynamicClient.jwksUri}" )
+	private String dynamicJwks;
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests().antMatchers("/", "/home", "/css/**").permitAll()
@@ -58,6 +94,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(openIdConnectAuthenticationProvider());
+    }
+    
+    @Bean
+    public static PropertyPlaceholderConfigurer properties() {
+    	PropertyPlaceholderConfigurer ppc = new PropertyPlaceholderConfigurer();
+    	ClassPathResource[] resources = new ClassPathResource[] { new ClassPathResource("websecurity.properties") };
+    	ppc.setLocations(resources);
+    	ppc.setIgnoreUnresolvablePlaceholders(true);
+    	return ppc;
     }
 	
     @Bean
@@ -109,15 +154,15 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 		StaticClientConfigurationService clientConfigurationService = new StaticClientConfigurationService();
 		
 		RegisteredClient client = new RegisteredClient();
-		client.setClientId("idbind");
-		client.setClientSecret("secret");
-		client.setClientName("Identity Binder");
-		client.setScope(Sets.newHashSet("openid", "email", "address", "profile", "phone", "org.mitre.idbind.query"));
+		client.setClientId(staticId);
+		client.setClientSecret(staticSecret);
+		client.setClientName(staticName);
+		client.setScope(Sets.newHashSet(staticScope));
 		client.setTokenEndpointAuthMethod(AuthMethod.SECRET_BASIC);
-		client.setRedirectUris(Sets.newHashSet("http://localhost:8080/identity-binder/openid_connect_login"));
+		client.setRedirectUris(Sets.newHashSet(staticRedirects));
 		client.setRequestObjectSigningAlg(JWSAlgorithm.RS256);
-		client.setJwksUri("http://localhost:8080/identity-binder/jwk");
-		client.setAllowIntrospection(true);
+		client.setJwksUri(staticJwks);
+		client.setAllowIntrospection(Boolean.parseBoolean(staticInstrospection));
 		
 		Map<String, RegisteredClient> clients = new HashMap<String, RegisteredClient>();
 		clients.put("http://localhost:8080/openid-connect-server-webapp/", client);
@@ -140,12 +185,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 		DynamicRegistrationClientConfigurationService clientConfigurationService = new DynamicRegistrationClientConfigurationService();
 		
 		RegisteredClient client = new RegisteredClient();
-		client.setClientName("Identity Binder Service");
-		client.setScope(Sets.newHashSet("openid", "email", "address", "profile", "phone"));
+		client.setClientName(dynamicName);
+		client.setScope(Sets.newHashSet(dynamicScope));
 		client.setTokenEndpointAuthMethod(AuthMethod.SECRET_BASIC);
-		client.setRedirectUris(Sets.newHashSet("http://localhost:8080/identity-binder/openid_connect_login"));
+		client.setRedirectUris(Sets.newHashSet(dynamicRedirects));
 		client.setRequestObjectSigningAlg(JWSAlgorithm.RS256);
-		client.setJwksUri("http://localhost:8080/identity-binder/jwk");
+		client.setJwksUri(dynamicJwks);
 		
 		clientConfigurationService.setTemplate(client);
 		
