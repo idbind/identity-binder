@@ -31,7 +31,9 @@ public class ConsistencyServiceDefault implements ConsistencyService {
 	@Override
 	public boolean isConsistent(Set<OIDCAuthenticationToken> tokens) 
 	{
-		if (tokens.size() <= 1) { // set of 1 or 0 is inherently consistent
+		// set of 1 or 0 is inherently consistent
+		if (tokens.isEmpty()) return true;
+		if (tokens.size() == 1) {
 			OIDCAuthenticationToken token = Iterables.getFirst(tokens, null);
 			MultipleIdentity multiple = identityService.getMultipleBySubjectIssuer(token.getSub(), token.getIssuer());
 			

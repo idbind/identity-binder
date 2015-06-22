@@ -1,7 +1,11 @@
 package org.mitre.openid.binder;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +29,7 @@ import com.google.common.collect.Sets;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringApplicationConfiguration(classes = BinderApplication.class)
-public class ServiceTest {
+public class IdentityServiceTest {
 
 	@Mock
 	SingleIdentityRepository singleIdentityRepository;
@@ -34,7 +38,7 @@ public class ServiceTest {
 	MultipleIdentityRepository multipleIdentityRepository;
 	
 	@InjectMocks
-	IdentityService service = new IdentityServiceDefault();
+	IdentityService idService = new IdentityServiceDefault();
 	
 	// test data
 	SingleIdentity identity1;
@@ -83,7 +87,7 @@ public class ServiceTest {
 	@Test
 	public void testGetSingle() {
 		
-		assertThat(service.getSingleBySubjectIssuer("user1", "www.example.com"), equalTo(identity1));
+		assertThat(idService.getSingleBySubjectIssuer("user1", "www.example.com"), equalTo(identity1));
 		
 	}
 	
@@ -94,11 +98,11 @@ public class ServiceTest {
 		Mockito.when(multipleIdentityRepository.findAll()).thenReturn(Sets.newHashSet(multi1, multi2));
 		
 		// success case
-		assertThat(service.getMultipleBySubjectIssuer("user1", "www.example.com"), equalTo(multi1));
-		assertThat(service.getMultipleBySubjectIssuer("user2", "www.example.com"), equalTo(multi1));
+		assertThat(idService.getMultipleBySubjectIssuer("user1", "www.example.com"), equalTo(multi1));
+		assertThat(idService.getMultipleBySubjectIssuer("user2", "www.example.com"), equalTo(multi1));
 		
 		// failure case
-		assertThat(service.getMultipleBySubjectIssuer("mr. shouldn't exist", "www.somewhereelse.net"), nullValue());
+		assertThat(idService.getMultipleBySubjectIssuer("mr. shouldn't exist", "www.somewhereelse.net"), nullValue());
 	}
 	
 	@Test
@@ -106,7 +110,7 @@ public class ServiceTest {
 		
 		assertThat(multi1.getIdentities(), hasItems(identity1, identity2));
 		
-		service.unbindBySubjectIssuer(multi1, "user1", "www.example.com");
+		idService.unbindBySubjectIssuer(multi1, "user1", "www.example.com");
 		
 		assertThat(multi1.getIdentities(), not(hasItem(identity1)));
 	}
