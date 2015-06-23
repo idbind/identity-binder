@@ -22,7 +22,6 @@ import org.mitre.openid.connect.client.service.impl.PlainAuthRequestUrlBuilder;
 import org.mitre.openid.connect.client.service.impl.StaticAuthRequestOptionsService;
 import org.mitre.openid.connect.client.service.impl.StaticClientConfigurationService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -100,15 +99,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(openIdConnectAuthenticationProvider());
-    }
-    
-    @Bean
-    public static PropertyPlaceholderConfigurer properties() {
-    	PropertyPlaceholderConfigurer ppc = new PropertyPlaceholderConfigurer();
-    	ClassPathResource[] resources = new ClassPathResource[] { new ClassPathResource("websecurity.properties") };
-    	ppc.setLocations(resources);
-    	ppc.setIgnoreUnresolvablePlaceholders(true);
-    	return ppc;
     }
 	
     @Bean

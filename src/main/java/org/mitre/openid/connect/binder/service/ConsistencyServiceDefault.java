@@ -46,6 +46,7 @@ public class ConsistencyServiceDefault implements ConsistencyService {
 			
 			return true;
 		}
+		// else: more than one token, so need to check for consistency
 		
 		Set<MultipleIdentity> multiples = new HashSet<MultipleIdentity>();
 		
