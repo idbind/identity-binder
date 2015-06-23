@@ -3,8 +3,8 @@ package org.mitre.openid.connect.binder.config;
 import org.mitre.oauth2.introspectingfilter.IntrospectingTokenService;
 import org.mitre.oauth2.introspectingfilter.service.impl.JWTParsingIntrospectionConfigurationService;
 import org.mitre.oauth2.introspectingfilter.service.impl.SimpleIntrospectionAuthorityGranter;
+import org.mitre.openid.connect.client.service.impl.DynamicRegistrationClientConfigurationService;
 import org.mitre.openid.connect.client.service.impl.DynamicServerConfigurationService;
-import org.mitre.openid.connect.client.service.impl.StaticClientConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ import org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEn
 public class OAuthProtectedResourceConfiguration extends ResourceServerConfigurerAdapter {
 	
 	@Autowired
-	private StaticClientConfigurationService clientConfigurationService;
+	private DynamicRegistrationClientConfigurationService clientConfigurationService;
 	
 	@Autowired
 	private DynamicServerConfigurationService serverConfigurationService;
