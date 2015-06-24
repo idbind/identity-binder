@@ -24,6 +24,7 @@ import org.mitre.openid.connect.client.service.impl.StaticClientConfigurationSer
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -141,6 +142,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 	}
 	
 	@Bean
+	@Primary
 	public DynamicServerConfigurationService dynamicServerConfigurationService() {
 		return new DynamicServerConfigurationService();
 	}
@@ -177,6 +179,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 	}
 	
 	@Bean
+	@Primary
 	public DynamicRegistrationClientConfigurationService dynamicClientConfigurationService() {
 		DynamicRegistrationClientConfigurationService clientConfigurationService = new DynamicRegistrationClientConfigurationService();
 		
