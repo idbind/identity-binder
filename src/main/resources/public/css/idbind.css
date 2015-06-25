@@ -10,3 +10,35 @@
 .long-button {
 	width: 200px;
 }
+
+.row-full-height {
+	height: 100%;
+}
+
+.col-full-height {
+	height: 100%;
+	vertical-align: middle;
+}
+
+.row-same-height {
+  	display: table;
+  	width: 100%;
+  	table-layout: fixed;
+}
+
+.col-xs-height {
+  	display: table-cell;
+  	float: none !important;
+}
+
+.form-inline .form-control {
+  	display: inline-block;
+  	width: 80%;
+  	vertical-align: middle;
+}
+
+.btn-default {
+	color: #333;
+  	background-color: #ddd;
+  	border-color: #ccc;
+}
