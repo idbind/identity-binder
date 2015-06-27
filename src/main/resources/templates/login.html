@@ -18,17 +18,16 @@
 						<h3 class="panel-title">Log In</h3>
 					</div>
 					<div class="panel-body">
-						Use this page to log in by entering an
+						Use this page to log in by selecting an existing preset or selecting 'Other' and entering an
 						<code>issuer URI</code>
 						or a
-						<code>webfinger identifier</code>
-						. Use the buttons to pre-fill the form with a known identifier.
+						<code>webfinger identifier</code>.
 					</div>
 				</div>
 
 				<div class="well">
 					<div class="row row-full-height">
-						<div class="col-xs-3 col-xs-height col-full-height">
+						<!--<div class="col-xs-3 col-xs-height col-full-height">
 							<button class="btn btn-block btn-default" id="localhost">Local MITREid Connect
 								Server (default setup)</button>
 								
@@ -47,7 +46,73 @@
 								<button type="submit" class="btn btn-primary">Log In</button>
 							</form>
 	
+						</div>-->
+						
+						<div class="col-md-12">
+							<table class="table table-striped table-hover">
+								<thead>
+									<tr>
+										<th class="col-sm-1"></th>
+										<th class="col-sm-4"><h4><b>Name</b></h4></th>
+										<th class="col-sm-7"><h4><b>URI or Identifier</b></h4></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr class="login-table-row">
+										<td>
+											<input type="radio" class="custom-radio" id="opt1" name="login-options">
+										</td>
+										<td>
+											<h4 class="text-primary">Local MITREid Connect Server (Default setup)</h4>
+										</td>
+										<td>
+											<h4>http://localhost:8080/openid-connect-server-webapp/</h4>
+										</td>
+									</tr>
+									<tr class="login-table-row">
+										<td>
+											<input type="radio" class="custom-radio" id="opt2" name="login-options">
+										</td>
+										<td>
+											<h4 class="text-primary">Local MITREid Connect Server #2</h4>
+										</td>
+										<td>
+											<h4>http://localhost:8080/my-openid-connect-server/</h4>
+										</td>
+									</tr>
+									<tr class="login-table-row">
+										<td>
+											<input type="radio" class="custom-radio" id="opt3" name="login-options">
+										</td>
+										<td>
+											<h4 class="text-primary">mitre.org integration site demo user</h4>
+										</td>
+										<td>
+											<h4>user@mitre.org</h4>
+										</td>
+									</tr>
+									
+									<tr class="login-table-row">
+										<td>
+											<input type="radio" class="custom-radio" id="opt3" name="login-options">
+										</td>
+										<td>
+											<h4 class="text-primary">Other:</h4>
+										</td>
+										<td>
+											<input type="text" class="form-control identifier-input" name="identifier"
+												id="identifier" placeholder="Enter URI or identifier" />
+										</td>
+									</tr>
+								</tbody>
+							</table>
 						</div>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-md-12 text-center">
+						<button type="button" class="btn btn-primary">Log In</button>
 					</div>
 				</div>
 

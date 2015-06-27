@@ -33,7 +33,7 @@
 
 .form-inline .form-control {
   	display: inline-block;
-  	width: 80%;
+  	width: 90%;
   	vertical-align: middle;
 }
 
@@ -41,4 +41,25 @@
 	color: #333;
   	background-color: #ddd;
   	border-color: #ccc;
+}
+
+table>tbody>.login-table-row>td {
+	vertical-align: middle;
+}
+
+.login-table-row td h3,
+.login-table-row td h4 {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	vertical-align: middle;
+}
+
+.custom-radio {
+	width: 18px;
+	height: 18px;
+}
+
+.identifier-input {
+	height: 42px;
+	font-size: 16px;
 }
