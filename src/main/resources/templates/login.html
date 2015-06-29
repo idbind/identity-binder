@@ -94,14 +94,14 @@
 									
 									<tr class="login-table-row">
 										<td>
-											<input type="radio" class="custom-radio" id="opt3" name="login-options">
+											<input type="radio" class="custom-radio" id="opt4" name="login-options">
 										</td>
 										<td>
 											<h4 class="text-primary">Other:</h4>
 										</td>
 										<td>
 											<input type="text" class="form-control identifier-input" name="identifier"
-												id="identifier" placeholder="Enter URI or identifier" />
+												id="identifier-field" placeholder="Enter URI or identifier" />
 										</td>
 									</tr>
 								</tbody>
@@ -112,7 +112,10 @@
 				
 				<div class="row">
 					<div class="col-md-12 text-center">
-						<button type="button" class="btn btn-primary">Log In</button>
+						<form name="identifier_form" action="openid_connect_login" method="get" onsubmit="return validateForm()">
+							<input type="hidden" name="identifier" id="identifier" value=""/>
+							<button type="submit" id="login-button" class="btn btn-primary">Log In</button>
+						</form>
 					</div>
 				</div>
 
@@ -123,6 +126,28 @@
 	</div>
 
 	<th:block th:include="fragments/jslib :: jslib"></th:block>
+	
+	<script type="text/javascript">
+		$(document).ready(
+			function() {
+				$('#login-button').on('click',
+					function() {
+						if (document.getElementById('opt1').checked) {
+							$('#identifier').val('http://localhost:8080/openid-connect-server-webapp/');
+						}
+						else if (document.getElementById('opt2').checked) {
+							$('#identifier').val('http://localhost:8080/my-openid-connect-server/');
+						}
+						else if (document.getElementById('opt3').checked) {
+							$('#identifier').val('user@mitre.org');
+						}
+						else if (document.getElementById('opt4').checked) {
+							$('#identifier').val(document.getElementById('identifier-field').value);
+						}
+					});
+			}
+		);
+	</script>
 	
 	<script type="text/javascript">
 		$(document).ready(
