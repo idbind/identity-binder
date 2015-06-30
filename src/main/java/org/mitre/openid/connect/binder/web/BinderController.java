@@ -4,6 +4,7 @@ import java.util.Collections;
 
 import javax.naming.AuthenticationNotSupportedException;
 
+import org.mitre.openid.connect.binder.model.IdentityProvider;
 import org.mitre.openid.connect.binder.model.MultipleIdentity;
 import org.mitre.openid.connect.binder.service.IdentityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.google.common.collect.Sets;
 
 @Controller
 @PreAuthorize("hasRole('ROLE_USER')")

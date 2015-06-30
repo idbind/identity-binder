@@ -4,7 +4,7 @@
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head th:replace="fragments/header :: header(title='Log In')">
 </head>
-<body>
+<body th:inline="text">
 
 	<nav th:replace="fragments/navbar :: navbar(title='Log In')"></nav>
 
@@ -27,74 +27,31 @@
 
 				<div class="well">
 					<div class="row row-full-height">
-						<!--<div class="col-xs-3 col-xs-height col-full-height">
-							<button class="btn btn-block btn-default" id="localhost">Local MITREid Connect
-								Server (default setup)</button>
-								
-							<button class="btn btn-block btn-default" id="localhost2">Local MITREid Connect
-								Server #2</button>
-							
-							<button class="btn btn-block btn-default" id="mitreidorg">mitre.org
-								integration site demo user</button>
-						</div>
-	
-						<div class="col-xs-9 col-xs-height col-full-height">
-	
-							<form name="identifier_form" class="form-inline" action="openid_connect_login" onsubmit="return validateForm()" method="get">
-								<input type="text" class="form-control" name="identifier"
-										id="identifier" placeholder="URI or identifier" />
-								<button type="submit" class="btn btn-primary">Log In</button>
-							</form>
-	
-						</div>-->
-						
 						<div class="col-md-12">
 							<table class="table table-striped table-hover">
 								<thead>
 									<tr>
 										<th class="col-sm-1"></th>
-										<th class="col-sm-4"><h4><b>Name</b></h4></th>
-										<th class="col-sm-7"><h4><b>URI or Identifier</b></h4></th>
+										<th class="col-sm-4">Name</th>
+										<th class="col-sm-7">URI or Identifier</th>
 									</tr>
 								</thead>
 								<tbody>
-									<tr class="login-table-row">
+									<tr th:each="idp,iter : ${idps}" class="login-table-row">
 										<td>
-											<input type="radio" class="custom-radio" id="opt1" name="login-options">
+											<input type="radio" class="custom-radio" th:id="'opt'+${iter.count}" name="login-options">
 										</td>
 										<td>
-											<h4 class="text-primary">Local MITREid Connect Server (Default setup)</h4>
+											<h4 class="text-primary">[[ ${ idp.name } ]]</h4>
 										</td>
 										<td>
-											<h4>http://localhost:8080/openid-connect-server-webapp/</h4>
-										</td>
-									</tr>
-									<tr class="login-table-row">
-										<td>
-											<input type="radio" class="custom-radio" id="opt2" name="login-options">
-										</td>
-										<td>
-											<h4 class="text-primary">Local MITREid Connect Server #2</h4>
-										</td>
-										<td>
-											<h4>http://localhost:8080/my-openid-connect-server/</h4>
-										</td>
-									</tr>
-									<tr class="login-table-row">
-										<td>
-											<input type="radio" class="custom-radio" id="opt3" name="login-options">
-										</td>
-										<td>
-											<h4 class="text-primary">mitre.org integration site demo user</h4>
-										</td>
-										<td>
-											<h4>user@mitre.org</h4>
+											<h4 class="text-muted">[[ ${ idp.identifier } ]]</h4>
 										</td>
 									</tr>
 									
 									<tr class="login-table-row">
 										<td>
-											<input type="radio" class="custom-radio" id="opt4" name="login-options">
+											<input type="radio" class="custom-radio" id="opt-other" name="login-options">
 										</td>
 										<td>
 											<h4 class="text-primary">Other:</h4>
@@ -114,7 +71,7 @@
 					<div class="col-md-12 text-center">
 						<form name="identifier_form" action="openid_connect_login" method="get" onsubmit="return validateForm()">
 							<input type="hidden" name="identifier" id="identifier" value=""/>
-							<button type="submit" id="login-button" class="btn btn-primary">Log In</button>
+							<button type="submit" id="login-button" class="btn btn-primary long-button">Log In</button>
 						</form>
 					</div>
 				</div>
@@ -141,30 +98,12 @@
 						else if (document.getElementById('opt3').checked) {
 							$('#identifier').val('user@mitre.org');
 						}
-						else if (document.getElementById('opt4').checked) {
+						else if (document.getElementById('opt-other').checked) {
 							$('#identifier').val(document.getElementById('identifier-field').value);
 						}
 					});
 			}
 		);
-	</script>
-	
-	<script type="text/javascript">
-		$(document).ready(
-			function() {
-				$('#localhost').on('click',
-					function() {
-						$('#identifier').val('http://localhost:8080/openid-connect-server-webapp/');
-					});
-				$('#localhost2').on('click',
-					function() {
-						$('#identifier').val('http://localhost:8080/my-openid-connect-server/');
-					});
-				$('#mitreidorg').on('click',
-					function() {
-						$('#identifier').val('user@mitreid.org');
-					});
-			});
 	</script>
 	
 	<script type="text/javascript">
