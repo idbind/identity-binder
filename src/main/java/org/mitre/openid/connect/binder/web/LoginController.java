@@ -15,9 +15,9 @@ public class LoginController {
 		ModelAndView mav = new ModelAndView("login");
 		
 		mav.addObject("idps", new IdentityProvider[] {new IdentityProvider("Local MITREid Connect Server (Default setup)",
-																	"http://localhost:8080/openid-server-connect-webapp/"),
+																	"http://localhost:8080/openid-server-connect-webapp"),
 													  new IdentityProvider("Local MITREid Connect Server #2",
-											  						"http://localhost:8080/my-openid-connect-server/"),
+											  						"http://localhost:8080/my-openid-connect-server"),
 											  		  new IdentityProvider("mitre.org integration site demo user",
 											  					    "user@mitre.org")});
 		return mav;

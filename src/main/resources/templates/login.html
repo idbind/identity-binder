@@ -28,7 +28,7 @@
 				<div class="well">
 					<div class="row row-full-height">
 						<div class="col-md-12">
-							<table class="table table-striped table-hover">
+							<table id="login-table" class="table table-striped table-hover">
 								<thead>
 									<tr>
 										<th class="col-sm-1"></th>
@@ -70,7 +70,7 @@
 				<div class="row">
 					<div class="col-md-12 text-center">
 						<form name="identifier_form" action="openid_connect_login" method="get" onsubmit="return validateForm()">
-							<input type="hidden" name="identifier" id="identifier" value=""/>
+							<input type="text" name="identifier" id="identifier" value=""/>
 							<button type="submit" id="login-button" class="btn btn-primary long-button">Log In</button>
 						</form>
 					</div>
@@ -89,8 +89,10 @@
 			function() {
 				$('#login-button').on('click',
 					function() {
-						if (document.getElementById('opt1').checked) {
-							$('#identifier').val('http://localhost:8080/openid-connect-server-webapp/');
+						//var iden_field = $('#identifier-field');
+						var iden_input = $('#identifier');
+						if ( $('#opt1')[0].checked ) {
+							iden_input.val('http://localhost:8080/openid-connect-server-webapp/');
 						}
 						else if (document.getElementById('opt2').checked) {
 							$('#identifier').val('http://localhost:8080/my-openid-connect-server/');
@@ -99,16 +101,39 @@
 							$('#identifier').val('user@mitre.org');
 						}
 						else if (document.getElementById('opt-other').checked) {
-							$('#identifier').val(document.getElementById('identifier-field').value);
+							var iden = $('#identifier-field').val();
+							$('#identifier').val(iden);
+							//$('#identifier').val('http://localhost:8080/openid-connect-server-webapp/');
 						}
-					});
+						console.log( $('#identifier').val() );
+					}
+					/*function() {
+						var $radioBtn = $('#login-table tr.login-table-row input[name="login-options"]:checked');
+						if ( $radioBtn.length === 1 ) {
+							var id = $radioBtn.attr('id');
+							console.log(id);
+							var identifier = "";
+							if ( id === 'opt-other' ) {
+								identifier = $('#identifier-field').val();
+							}
+							else {
+								identifier = $radioBtn.parent().parent().filter("h4.text-muted").text();
+							}
+							console.log(identifier);
+							$('#identifier').val( identifier );
+						}
+					}*/
+				);
 			}
 		);
 	</script>
 	
 	<script type="text/javascript">
 		function validateForm() {
+			//temp
+			//return false;
 			var input = document.forms['identifier_form']['identifier'].value;
+			console.log( input );
 			if (input == null || input == "") {
 				alert("Please enter a valid issuer URI or webfinger identifier.")
 				return false;
