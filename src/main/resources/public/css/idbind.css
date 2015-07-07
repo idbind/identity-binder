@@ -43,6 +43,10 @@
   	border-color: #ccc;
 }
 
+.login-table>tbody>tr:hover {
+	background-color: #ddd;
+}
+
 table>tbody>.login-table-row>td {
 	vertical-align: middle;
 }
@@ -62,4 +66,9 @@ table>tbody>.login-table-row>td {
 .identifier-input {
 	height: 42px;
 	font-size: 16px;
+}
+
+.selected-glyph {
+	font-size: 20px;
+	color: gray;
 }
