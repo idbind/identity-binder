@@ -45,6 +45,7 @@
 
 .login-table>tbody>tr:hover {
 	background-color: #ddd;
+	cursor: pointer;
 }
 
 table>tbody>.login-table-row>td {

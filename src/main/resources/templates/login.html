@@ -88,24 +88,11 @@
 	
 	<script>
 		angular.module('loginModule', [])
-			.controller('idpCtrl', ['$scope', function($scope) {
+			.controller('idpCtrl', function($scope, $http) {
 				$scope.idp = "";
 				$scope.other_idp = "";
 				$scope.other_selected = false;
-				$scope.idps = [
-					{
-						name: 'Local MITREid Connect Server (default setup)',
-						identifier: 'http://localhost:8080/openid-connect-server-webapp/'
-					},
-					{
-						name: 'Local MITREid Connect Server #2',
-						identifier: 'http://locahost:8080/my-openid-connect-server/'
-					},
-					{
-						name: 'mitre.org integration site demo user',
-						identifier: 'user@mitre.org'
-					}
-				];
+				$scope.idps = [];
 				
 				$scope.setOption = function (option) {
 					$scope.idp = option.identifier;
@@ -115,7 +102,12 @@
 				$scope.setOther = function () {
 					$scope.idp = $scope.other_idp;
 				}
-			}])
+				
+				$http.get('idps.json').success( function (data) {
+					$scope.idps = data;
+				});
+			})
+			
 			.directive('setFocus', function() {
 				return function (scope, element, attrs) {
 					scope.$watch(attrs.setFocus, function(value) {
