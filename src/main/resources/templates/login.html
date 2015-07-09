@@ -103,11 +103,12 @@
 					$scope.idp = $scope.other_idp;
 				}
 				
-				$http.get('idps.json').success( function (data) {
+				$http.get('/identity-binder/idps').success( function (data) {
 					$scope.idps = data;
 				});
 			})
 			
+			// Bring the 'Other' input field to focus when its row is selected
 			.directive('setFocus', function() {
 				return function (scope, element, attrs) {
 					scope.$watch(attrs.setFocus, function(value) {

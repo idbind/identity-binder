@@ -20,7 +20,7 @@ public class BinderApplication {
     @Bean
     public static PropertyPlaceholderConfigurer properties() {
     	PropertyPlaceholderConfigurer ppc = new PropertyPlaceholderConfigurer();
-    	ClassPathResource[] resources = new ClassPathResource[] { new ClassPathResource("websecurity.properties") };
+    	ClassPathResource[] resources = new ClassPathResource[] { new ClassPathResource("websecurity.properties"), new ClassPathResource("idps.properties") };
     	ppc.setLocations(resources);
     	ppc.setIgnoreUnresolvablePlaceholders(true);
     	return ppc;

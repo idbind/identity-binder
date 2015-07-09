@@ -1,46 +1,13 @@
-.account-tile h1,
-.account-tile h2,
-.account-tile h3,
-.account-tile h4,
-.account-tile h5 {
-	margin-top: 5px;
-	margin-bottom: 5px;
-}
+/******* GENERAL *******/
 
 .long-button {
 	width: 200px;
 }
 
+/******* LOGIN PAGE *******/
+
 .row-full-height {
 	height: 100%;
-}
-
-.col-full-height {
-	height: 100%;
-	vertical-align: middle;
-}
-
-.row-same-height {
-  	display: table;
-  	width: 100%;
-  	table-layout: fixed;
-}
-
-.col-xs-height {
-  	display: table-cell;
-  	float: none !important;
-}
-
-.form-inline .form-control {
-  	display: inline-block;
-  	width: 90%;
-  	vertical-align: middle;
-}
-
-.btn-default {
-	color: #333;
-  	background-color: #ddd;
-  	border-color: #ccc;
 }
 
 .login-table>tbody>tr:hover {
@@ -59,11 +26,6 @@ table>tbody>.login-table-row>td {
 	vertical-align: middle;
 }
 
-.custom-radio {
-	width: 18px;
-	height: 18px;
-}
-
 .identifier-input {
 	height: 42px;
 	font-size: 16px;
@@ -72,4 +34,15 @@ table>tbody>.login-table-row>td {
 .selected-glyph {
 	font-size: 20px;
 	color: gray;
+}
+
+/******* ACCOUNT-TILE *******/
+
+.account-tile h1,
+.account-tile h2,
+.account-tile h3,
+.account-tile h4,
+.account-tile h5 {
+	margin-top: 5px;
+	margin-bottom: 5px;
 }
