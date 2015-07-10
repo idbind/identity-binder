@@ -5,9 +5,7 @@ import java.util.List;
 
 import org.mitre.openid.connect.binder.model.IdentityProvider;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,13 +20,13 @@ public class LoginController {
 	private List<String> idpIdentifiers;
 	
 	@RequestMapping(value = "/idps", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<IdentityProvider>> getIdps() {
+	public List<IdentityProvider> getIdps() {
 		
 		List<IdentityProvider> idpList = new ArrayList<IdentityProvider>();
 		for( int i=0; i<Math.min(idpNames.size(), idpIdentifiers.size()); ++i ) {
 			idpList.add(new IdentityProvider(idpNames.get(i), idpIdentifiers.get(i)));
 		}
 		
-		return new ResponseEntity<List<IdentityProvider>>( idpList, HttpStatus.OK );
+		return idpList;
 	}
 }
