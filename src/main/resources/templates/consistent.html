@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:replace="fragments/header :: header(title='Bind')">
+</head>
+<body th:inline="text">
+
+	<nav th:replace="fragments/navbar :: navbar(title='Bind')"></nav>
+
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="col-md-12">
+			
+				<div class="panel panel-info">
+					<div class="panel-heading">
+						<h3 class="panel-title">Accounts already consistent</h3>
+					</div>
+					<div class="panel-body">There are no accounts to bind currently.</div>
+				</div>
+			
+			</div>
+		</div>
+		
+		<div class="row-fluid text-center">
+			<a th:href="@{/accounts}" class="btn btn-primary">Back to Accounts</a>
+		</div>
+	</div>
+
+	<th:block th:include="fragments/jslib :: jslib"></th:block>
+
+</body>
+</html>

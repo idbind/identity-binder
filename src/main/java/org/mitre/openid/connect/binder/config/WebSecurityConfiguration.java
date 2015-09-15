@@ -78,8 +78,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 	private List<String> dynamicRedirects;
 	@Value( "${dynamicClient.jwksUri}" )
 	private String dynamicJwks;
+	@Value( "${dynamicClient.introspection}" )
+	private String dynamicIntrospection;
 	
-	@Value( "${signerService.defaultId" )
+	@Value( "${signerService.defaultId}" )
 	private String defaultSignerId;
 	@Value( "${signerService.defaultAlgorithm}" )
 	private String defaultAlgorithm;
@@ -191,6 +193,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
 		client.setRedirectUris(Sets.newHashSet(dynamicRedirects));
 		client.setRequestObjectSigningAlg(JWSAlgorithm.RS256);
 		client.setJwksUri(dynamicJwks);
+		client.setAllowIntrospection(Boolean.parseBoolean(dynamicIntrospection));
 		
 		clientConfigurationService.setTemplate(client);
 		

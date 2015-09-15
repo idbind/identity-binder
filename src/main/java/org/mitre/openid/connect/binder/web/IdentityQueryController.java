@@ -30,7 +30,7 @@ public class IdentityQueryController {
 	@PreAuthorize("#oauth2.hasScope('org.mitre.idbind.query')")
 	@RequestMapping(value = "/query", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded", produces = "application/json")
 	public Set<SingleIdentity> queryUser(@RequestParam("issuer") String issuer, @RequestParam("subject") String subject) {
-		MultipleIdentity identity = identityService.getMultipleBySubjectIssuer(subject, issuer); 
+		MultipleIdentity identity = identityService.getMultipleBySubjectIssuer(subject, issuer);
 		return identity == null ? null : identity.getIdentities();
 	}
 	
