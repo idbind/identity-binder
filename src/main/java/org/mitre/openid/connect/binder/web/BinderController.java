@@ -64,8 +64,8 @@ public class BinderController {
 				mav.addObject("unbound", newMultiple == null ? Collections.EMPTY_SET : newMultiple.getIdentities());
 				
 				return mav;
-			}
-		}
+			} // else already consistent
+		} // else not multiple identities logged in, so inherently consistent
 		
 		mav = new ModelAndView("consistent");
 		return mav;
