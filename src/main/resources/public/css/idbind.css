@@ -46,3 +46,14 @@ table>tbody>.login-table-row>td {
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
+
+/******* ACCOUNT PAGE *******/
+
+.account-table>tbody>tr>td {
+	vertical-align: middle;
+}
+
+.glyph-online {
+	font-size: 20px;
+	margin-left: 15px;
+}

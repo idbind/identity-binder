@@ -13,10 +13,10 @@
 
 				<!-- begin page content -->
 
-				<table class="table table-striped table-hover">
+				<table class="table table-striped table-hover account-table">
 					<thead>
 						<tr>
-							<th class="col-sm-1">Status</th>
+							<th class="col-sm-1">Online</th>
 							<th class="col-sm-7">Profile</th>
 							<th class="col-sm-2">Activity</th>
 							<th class="col-sm-2">Actions</th>
@@ -26,10 +26,10 @@
 						<tr th:each="account,iter : ${accounts}"
 							th:with="online=${ #authentication.containsIssSubPair(account.issuer, account.subject) },u=${ account.userInfo } ">
 							<td>
-								<span class="glyphicon glyphicon-ok-circle text-success" th:if ="${ online }"></span>
-								<span class="glyphicon glyphicon-remove-circle text-danger" th:unless ="${ online }"></span>							
+								<span class="glyphicon glyphicon-ok-circle glyph-online text-success" th:if ="${ online }"></span>
+								<span class="glyphicon glyphicon-remove-circle glyph-online text-danger" th:unless ="${ online }"></span>							
 							</td>
-							<td class="">
+							<td>
 								<div th:replace="fragments/account-tile :: account-tile(${u}, ${account})">
 								
 								</div>
@@ -42,7 +42,7 @@
 							<td>
 								<div class="btn-group" role="group">
 									<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> View Details</button>
-  									<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span> Disconnect</button>
+  									<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span> Unbind</button>
 								</div>
 							
 							</td>
