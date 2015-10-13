@@ -68,6 +68,9 @@ public class IdentityServiceDefault implements IdentityService {
 		if (multipleIdentity == null || multipleIdentity.getIdentities() == null || multipleIdentity.getIdentities().isEmpty()) {
 			return multipleIdentity;
 		}
+		
+		//TODO: temporary
+		System.out.println("Unbinding...");
 
 		Set<SingleIdentity> identities = multipleIdentity.getIdentities();
 		identities.remove(singleIdentity);

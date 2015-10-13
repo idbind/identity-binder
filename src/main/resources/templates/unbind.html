@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:replace="fragments/header :: header(title='Unbind')">
+</head>
+<body th:inline="text">
+
+	<nav th:replace="fragments/navbar :: navbar(title='Unbind')"></nav>
+
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="col-md-12">
+
+				<!-- begin page content -->
+
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<h3 class="panel-title">Unbind this account?</h3>
+					</div>
+					<div class="panel-body">Are you sure you want to unbind this account from your other identities? If there are more than one other identities
+											that have been bound to this one, they will remain bound after this operation.</div>
+				</div>
+				
+				<div class="panel panel-info" th:if="${ loggedInAs }">
+					<div class="panel-body">Note: You are currently logged in as this identity. Unbinding it now will leave you logged in as this identity,
+											but detach it from the other identities.</div>
+				</div>
+
+
+				<div class="row-fluid">
+
+					<div class="col-md-6 col-md-offset-3" th:with="u=${ account.userInfo }">
+						<div th:replace="fragments/account-tile :: account-tile(${u}, ${account})"></div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="row-fluid">
+			<div class="col-md-2 col-md-offset-4">
+				<form class="text-center" th:action="@{/unbind}" method="post">
+					<input type="text" style="display: none;" name="issuer" th:value="${ account.issuer }">
+					<input type="text" style="display: none;" name="subject" th:value="${ account.subject }">
+					<input class="btn btn-success" type="submit" value="Unbind Account" />
+				</form>
+			</div>
+			<div class="col-md-2">
+				<button class="btn btn-danger" th:href="@{/accounts}">Cancel</button>
+			</div>
+
+		</div>
+		<!-- end page content -->
+	</div>
+
+	<th:block th:include="fragments/jslib :: jslib"></th:block>
+
+</body>
+</html>
