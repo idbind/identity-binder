@@ -69,12 +69,11 @@ public class IdentityServiceDefault implements IdentityService {
 			return multipleIdentity;
 		}
 		
-		//TODO: temporary
-		System.out.println("Unbinding...");
-
 		Set<SingleIdentity> identities = multipleIdentity.getIdentities();
 		identities.remove(singleIdentity);
 		multipleIdentity.setIdentities(identities);
+		
+		singleIdentityRepository.delete(singleIdentity);
 
 		return multipleIdentityRepository.save(multipleIdentity);
 	}

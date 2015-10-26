@@ -12,6 +12,14 @@
 			<div class="col-md-12">
 
 				<!-- begin page content -->
+				
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<h3 class="panel-title">Accounts</h3>
+					</div>
+					<div class="panel-body">Here you can manage all of your bound identities. You can view more information for any identity by clicking its "View Details" button,
+						or unbind an identity from the others by clicking its "Unbind" button. NOTE: You can only unbind an account if it is not currently online.</div>
+				</div>
 
 				<table class="table table-striped table-hover account-table">
 					<thead>
@@ -45,7 +53,7 @@
   									<form th:action="@{/unbind-confirm}" method="post">
   										<input type="text" style="display: none;" name="issuer" th:value="${ account.issuer }"/>
   										<input type="text" style="display: none;" name="subject" th:value="${ account.subject }"/>
-  										<button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span> Unbind</button>
+  										<button type="submit" class="btn btn-default" th:disabled="${online}"><span class="glyphicon glyphicon-trash"></span> Unbind</button>
 									</form>
 								</div>
 							

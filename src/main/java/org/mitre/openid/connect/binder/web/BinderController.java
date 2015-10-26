@@ -36,9 +36,6 @@ public class BinderController {
 	public ModelAndView bind() {
 		ModelAndView mv = new ModelAndView("redirect:accounts");
 		
-		//TODO: temporary
-		System.out.println("Inside bind()");
-		
 		try {
 			
 			identityService.bind();
@@ -54,9 +51,6 @@ public class BinderController {
 	@RequestMapping(value = "/bind", method = RequestMethod.GET)
 	public ModelAndView bindView() {
 		ModelAndView mav;
-		
-		//TODO: temporary
-		System.out.println("Inside bindView()");
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if(auth instanceof MultipleIdentityAuthentication) {
@@ -83,15 +77,10 @@ public class BinderController {
 	public ModelAndView unbind(@RequestParam("issuer") String issuer, @RequestParam("subject") String subject) {
 		ModelAndView mav = new ModelAndView("redirect:accounts");
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if(auth instanceof MultipleIdentityAuthentication) {
-			MultipleIdentityAuthentication multiAuth = (MultipleIdentityAuthentication)auth;
-			if( multiAuth.containsIssSubPair(issuer, subject)) {
-				MultipleIdentity multiple = identityService.getPreexistingMultiple();
-			
-				identityService.unbindBySubjectIssuer(multiple, subject, issuer);
-			} // else does not contain chosen identity
-		} // else wrong authentication
+		// Check that identity actually exists
+		MultipleIdentity multiple = identityService.getMultipleBySubjectIssuer(subject, issuer);
+		if( multiple != null )
+			identityService.unbindBySubjectIssuer(multiple, subject, issuer);
 		
 		return mav;
 	}
@@ -101,15 +90,18 @@ public class BinderController {
 		ModelAndView mav = new ModelAndView("unbind");
 		
 		SingleIdentity chosen = identityService.getSingleBySubjectIssuer(subject, issuer);
-		mav.addObject("account", chosen);
+		if( chosen != null )
+			mav.addObject("account", chosen);
+		else
+			mav = new ModelAndView("redirect:accounts");
 		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		/*Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if(auth instanceof MultipleIdentityAuthentication) {
 			MultipleIdentityAuthentication multiAuth = (MultipleIdentityAuthentication)auth;
 			
 			mav.addObject("loggedInAs", multiAuth.containsIssSubPair(issuer, subject));
 			
-			/*if(!consistencyService.isConsistent(multiAuth.getTokens())) {
+			if(!consistencyService.isConsistent(multiAuth.getTokens())) {
 				
 				mav = new ModelAndView("bind");
 				
@@ -120,8 +112,8 @@ public class BinderController {
 				mav.addObject("unbound", newMultiple == null ? Collections.EMPTY_SET : newMultiple.getIdentities());
 				
 				return mav;
-			}*/
-		}
+			}
+		}*/
 		
 		return mav;
 	}
