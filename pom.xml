@@ -15,7 +15,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<start-class>org.mitre.openid.binder.Application</start-class>
 		<java.version>1.7</java.version>
-		<mitreid-connect.version>1.2.0-SNAPSHOT</mitreid-connect.version>
+		<mitreid-connect.version>1.2.2</mitreid-connect.version>
 	</properties>
 
 	<parent>

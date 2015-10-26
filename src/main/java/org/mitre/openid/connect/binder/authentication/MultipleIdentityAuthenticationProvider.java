@@ -1,6 +1,5 @@
 package org.mitre.openid.connect.binder.authentication;
 
-import java.text.ParseException;
 import java.util.Collections;
 import java.util.Set;
 
@@ -8,17 +7,16 @@ import org.mitre.openid.connect.client.NamedAdminAuthoritiesMapper;
 import org.mitre.openid.connect.client.OIDCAuthoritiesMapper;
 import org.mitre.openid.connect.client.UserInfoFetcher;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
+import org.mitre.openid.connect.model.PendingOIDCAuthenticationToken;
 import org.mitre.openid.connect.model.UserInfo;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.google.common.collect.Sets;
 import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTParser;
 
 public class MultipleIdentityAuthenticationProvider implements AuthenticationProvider {
 	
@@ -40,25 +38,21 @@ public class MultipleIdentityAuthenticationProvider implements AuthenticationPro
 
 			return authentication;
 
-		} else if (authentication instanceof OIDCAuthenticationToken) {
+		} else if (authentication instanceof PendingOIDCAuthenticationToken) {
 
-			OIDCAuthenticationToken incomingToken = (OIDCAuthenticationToken) authentication;
+			PendingOIDCAuthenticationToken incomingToken = (PendingOIDCAuthenticationToken) authentication;
 			
 			// TODO: intelligently cache and handle userinfo
 			UserInfo userInfo = userInfoFetcher.loadUserInfo(incomingToken);
 			
+			JWT idToken = incomingToken.getIdToken();
+			
 			OIDCAuthenticationToken newToken = new OIDCAuthenticationToken(incomingToken.getSub(),
 					incomingToken.getIssuer(),
 					userInfo, Collections.EMPTY_SET,
-					incomingToken.getIdTokenValue(), incomingToken.getAccessTokenValue(), incomingToken.getRefreshTokenValue());
+					idToken, incomingToken.getAccessTokenValue(), incomingToken.getRefreshTokenValue());
 			
-			JWT idToken = null;
-			try {
-				idToken = JWTParser.parse( newToken.getIdTokenValue() );
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
 
 			// check for existing multi-authentication context
 			Authentication preexistingAuthentication = SecurityContextHolder.getContext().getAuthentication();
@@ -90,7 +84,8 @@ public class MultipleIdentityAuthenticationProvider implements AuthenticationPro
 	@Override
 	public boolean supports(Class<?> authentication) {
 		return MultipleIdentityAuthentication.class.isAssignableFrom(authentication)
-				|| OIDCAuthenticationToken.class.isAssignableFrom(authentication);
+				|| OIDCAuthenticationToken.class.isAssignableFrom(authentication)
+				|| PendingOIDCAuthenticationToken.class.isAssignableFrom(authentication);
 	}
 
 	public OIDCAuthoritiesMapper getAuthoritiesMapper() {
