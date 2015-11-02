@@ -5,7 +5,6 @@ import java.util.Collections;
 import javax.naming.AuthenticationNotSupportedException;
 
 import org.mitre.openid.connect.binder.authentication.MultipleIdentityAuthentication;
-import org.mitre.openid.connect.binder.model.IdentityProvider;
 import org.mitre.openid.connect.binder.model.MultipleIdentity;
 import org.mitre.openid.connect.binder.model.SingleIdentity;
 import org.mitre.openid.connect.binder.service.ConsistencyService;
@@ -19,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.google.common.collect.Sets;
 
 @Controller
 @PreAuthorize("hasRole('ROLE_USER')")
@@ -85,7 +82,7 @@ public class BinderController {
 		return mav;
 	}
 	
-	@RequestMapping(value = "/unbind-confirm", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded")
+	@RequestMapping(value = "/unbind/confirm", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded")
 	public ModelAndView unbindView(@RequestParam("issuer") String issuer, @RequestParam("subject") String subject) {
 		ModelAndView mav = new ModelAndView("unbind");
 		
@@ -98,7 +95,7 @@ public class BinderController {
 		return mav;
 	}
 	
-	@RequestMapping(value = "/unbindall", method = RequestMethod.POST)
+	@RequestMapping(value = "/unbind-all", method = RequestMethod.POST)
 	public ModelAndView unbindAll() {
 		ModelAndView mav = new ModelAndView("redirect:accounts");
 		
@@ -119,7 +116,7 @@ public class BinderController {
 		return mav;
 	}
 	
-	@RequestMapping(value = "/unbindall-confirm", method = RequestMethod.GET)
+	@RequestMapping(value = "/unbind-all/confirm", method = RequestMethod.GET)
 	public ModelAndView unbindAllView() {
 		ModelAndView mav = new ModelAndView("unbindall");
 		
