@@ -95,25 +95,33 @@ public class BinderController {
 		else
 			mav = new ModelAndView("redirect:accounts");
 		
-		/*Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if(auth instanceof MultipleIdentityAuthentication) {
-			MultipleIdentityAuthentication multiAuth = (MultipleIdentityAuthentication)auth;
+		return mav;
+	}
+	
+	@RequestMapping(value = "/unbindall", method = RequestMethod.POST)
+	public ModelAndView unbindAll() {
+		ModelAndView mav = new ModelAndView("redirect:accounts");
+		
+		MultipleIdentity multiple = identityService.getCurrentMultiple();
+		if( multiple != null ) {
 			
-			mav.addObject("loggedInAs", multiAuth.containsIssSubPair(issuer, subject));
-			
-			if(!consistencyService.isConsistent(multiAuth.getTokens())) {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			if(auth instanceof MultipleIdentityAuthentication) {
+				MultipleIdentityAuthentication multiAuth = (MultipleIdentityAuthentication)auth;
 				
-				mav = new ModelAndView("bind");
-				
-				MultipleIdentity preexistingMultiple = identityService.getPreexistingMultiple();
-				mav.addObject("bound", preexistingMultiple == null ? Collections.EMPTY_SET : preexistingMultiple.getIdentities());
-				
-				MultipleIdentity newMultiple = identityService.getNewMultiple();
-				mav.addObject("unbound", newMultiple == null ? Collections.EMPTY_SET : newMultiple.getIdentities());
-				
-				return mav;
+				for( SingleIdentity single : multiple.getIdentities() ) {
+					if( !multiAuth.containsIssSubPair(single.getIssuer(), single.getSubject()) )
+						identityService.unbind(multiple, single);
+				}
 			}
-		}*/
+		}
+		
+		return mav;
+	}
+	
+	@RequestMapping(value = "/unbindall-confirm", method = RequestMethod.GET)
+	public ModelAndView unbindAllView() {
+		ModelAndView mav = new ModelAndView("unbindall");
 		
 		return mav;
 	}

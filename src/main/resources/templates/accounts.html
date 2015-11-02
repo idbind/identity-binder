@@ -48,22 +48,27 @@
 								<b>Last used:</b> <span class="text-muted">[[ ${ beans.prettyTime.format(account.lastUsed) } ]]</span>						
 							</td>
 							<td>
-								<div class="btn-group" role="group">
-									<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-search"></span> View Details</button>
-  									<form th:action="@{/unbind-confirm}" method="post">
-  										<input type="text" style="display: none;" name="issuer" th:value="${ account.issuer }"/>
-  										<input type="text" style="display: none;" name="subject" th:value="${ account.subject }"/>
-  										<button type="submit" class="btn btn-default" th:disabled="${online}"><span class="glyphicon glyphicon-trash"></span> Unbind</button>
-									</form>
-								</div>
-							
+								<button type="button" class="btn btn-default action-button"><span class="glyphicon glyphicon-search"></span> View Details</button>
+ 								<form th:action="@{/unbind-confirm}" method="post">
+ 									<input type="text" style="display: none;" name="issuer" th:value="${ account.issuer }"/>
+ 									<input type="text" style="display: none;" name="subject" th:value="${ account.subject }"/>
+ 									<button type="submit" class="btn btn-default action-button" th:disabled="${online}">
+ 										<span th:unless="${ online }" class="glyphicon glyphicon-trash"></span>[[ ${ online }? ' Logged In' : ' Unbind' ]]</button>
+								</form>
 							</td>
 						</tr>
 					</tbody>
 				</table>
 				
-				<div class="text-center">
-					<a class="btn btn-success" th:href="@{/login}">Add Another Account</a>
+				<div class="row text-center">
+					<div class="col-md-2 col-md-offset-4">
+						<a class="btn btn-success" th:href="@{/login}">Add Another Account</a>
+					</div>
+					<div class="col-md-2">
+						<form th:action="@{/unbindall-confirm}" method="get">
+							<button type="submit" class="btn btn-danger">Unbind All</button>
+						</form>
+					</div>
 				</div>
 
 				<!-- end page content -->

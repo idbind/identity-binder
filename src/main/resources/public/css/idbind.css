@@ -57,3 +57,9 @@ table>tbody>.login-table-row>td {
 	font-size: 20px;
 	margin-left: 15px;
 }
+
+.action-button {
+	margin-top: 3px;
+	margin-bottom: 3px;
+	width: 130px;
+}
