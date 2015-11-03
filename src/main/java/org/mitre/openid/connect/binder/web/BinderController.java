@@ -75,6 +75,7 @@ public class BinderController {
 		ModelAndView mav = new ModelAndView("redirect:accounts");
 		
 		// Check that identity actually exists
+		// TODO make sure user actually owns the account being unbound
 		MultipleIdentity multiple = identityService.getMultipleBySubjectIssuer(subject, issuer);
 		if( multiple != null )
 			identityService.unbindBySubjectIssuer(multiple, subject, issuer);
@@ -95,6 +96,7 @@ public class BinderController {
 		return mav;
 	}
 	
+	// TODO move logic into service method
 	@RequestMapping(value = "/unbind-all", method = RequestMethod.POST)
 	public ModelAndView unbindAll() {
 		ModelAndView mav = new ModelAndView("redirect:accounts");
