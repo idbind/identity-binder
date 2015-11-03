@@ -12,7 +12,6 @@ import org.mitre.oauth2.model.ClientDetailsEntity.AuthMethod;
 import org.mitre.openid.connect.binder.authentication.MultipleIdentityAuthenticationConsistencyFilter;
 import org.mitre.openid.connect.binder.authentication.MultipleIdentityAuthenticationProvider;
 import org.mitre.openid.connect.client.OIDCAuthenticationFilter;
-import org.mitre.openid.connect.client.OIDCFilterFactory;
 import org.mitre.openid.connect.client.keypublisher.ClientKeyPublisher;
 import org.mitre.openid.connect.client.service.impl.DynamicRegistrationClientConfigurationService;
 import org.mitre.openid.connect.client.service.impl.DynamicServerConfigurationService;
@@ -117,7 +116,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter{
     
 	@Bean
 	public OIDCAuthenticationFilter openIdConnectAuthenticationFilter() throws Exception {
-		OIDCAuthenticationFilter filter = OIDCFilterFactory.createOIDCFilter();
+		OIDCAuthenticationFilter filter = new OIDCAuthenticationFilter();
 		
 		filter.setAuthenticationManager(authenticationManager());
 		
