@@ -120,7 +120,7 @@ public class BinderController {
 	
 	@RequestMapping(value = "/unbind-all/confirm", method = RequestMethod.GET)
 	public ModelAndView unbindAllView() {
-		ModelAndView mav = new ModelAndView("unbindall");
+		ModelAndView mav = new ModelAndView("unbind-all");
 		
 		return mav;
 	}
