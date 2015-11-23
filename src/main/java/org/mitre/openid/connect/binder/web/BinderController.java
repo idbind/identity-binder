@@ -136,13 +136,4 @@ public class BinderController {
 		
 		return mav;
 	}
-	
-	@RequestMapping(value = "/accounts", method = RequestMethod.GET)
-	public ModelAndView accountsView() {
-		ModelAndView mav = new ModelAndView("accounts");
-		
-		mav.addObject("accounts", identityService.getCurrentMultiple().getIdentities());
-		
-		return mav;
-	}
 }
