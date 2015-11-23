@@ -1,8 +1,6 @@
 package org.mitre.openid.connect.binder.web;
 
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.naming.AuthenticationNotSupportedException;
 
@@ -107,25 +105,7 @@ public class BinderController {
 		ModelAndView mav = new ModelAndView("redirect:accounts");
 		
 		MultipleIdentity multiple = identityService.getCurrentMultiple();
-		if( multiple != null ) {
-			
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			if(auth instanceof MultipleIdentityAuthentication) {
-				MultipleIdentityAuthentication multiAuth = (MultipleIdentityAuthentication)auth;
-				
-				Set<SingleIdentity> singleIdentitiesToBeRemoved = new HashSet<>();
-				
-				for (SingleIdentity single : multiple.getIdentities()) {
-					if( !multiAuth.containsIssSubPair(single.getIssuer(), single.getSubject()) ) {
-						singleIdentitiesToBeRemoved.add(single);
-					}
-				}
-				
-				for (SingleIdentity single : singleIdentitiesToBeRemoved) {
-					identityService.unbind(multiple, single);
-				}
-			}
-		}
+		identityService.unbindAll(multiple);
 		
 		return mav;
 	}

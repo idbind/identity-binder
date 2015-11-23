@@ -248,5 +248,37 @@ public class IdentityServiceDefault implements IdentityService {
 	public Set<SingleIdentity> getAllIdentities() {
 		return Sets.newHashSet(singleIdentityRepository.findAll());
 	}
+	
+	/**
+	 * Only unbinds identities that aren't currently logged in to the Identity Binding Service.
+	 */
+	@Override
+	public MultipleIdentity unbindAll(MultipleIdentity multipleIdentity) {
+		
+		MultipleIdentity newMultipleIdentity = multipleIdentity;
+		
+		if( multipleIdentity != null ) {
+			
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			if(auth instanceof MultipleIdentityAuthentication) {
+				MultipleIdentityAuthentication multiAuth = (MultipleIdentityAuthentication)auth;
+				
+				Set<SingleIdentity> singleIdentitiesToBeRemoved = new HashSet<>();
+				
+				for (SingleIdentity single : multipleIdentity.getIdentities()) {
+					if( !multiAuth.containsIssSubPair(single.getIssuer(), single.getSubject()) ) {
+						singleIdentitiesToBeRemoved.add(single);
+					} // else TODO error or notice if accounts were logged in so couldnt be unbound?
+				}
+				
+				for (SingleIdentity single : singleIdentitiesToBeRemoved) {
+					newMultipleIdentity = unbind(multipleIdentity, single);
+				}
+				
+			} // else TODO error if something went wrong?
+		} // else TODO error if something went wrong?
+		
+		return newMultipleIdentity;
+	}
 
 }

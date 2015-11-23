@@ -118,4 +118,12 @@ public interface IdentityService {
 	 * @return
 	 */
 	public Set<SingleIdentity> getAllIdentities();
+	
+/**
+ * Unbinds all identities (as possible) from the given multipleIdentity object.
+ * @param multipleIdentity
+ * 
+ * @return The multipleIdentity object with remaining identities that were not unbound.
+ */
+	public MultipleIdentity unbindAll(MultipleIdentity multipleIdentity);
 }
