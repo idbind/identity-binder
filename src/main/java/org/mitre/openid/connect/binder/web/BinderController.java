@@ -79,10 +79,10 @@ public class BinderController {
 		// Check that identity actually exists
 		// TODO make sure user actually owns the account being unbound
 		MultipleIdentity multiple = identityService.getMultipleBySubjectIssuer(subject, issuer);
-		if( multiple != null )
+		if( multiple != null ) {
 			identityService.unbindBySubjectIssuer(multiple, subject, issuer);
 		// TODO else: should it throw some kind of error here?
-		
+		}
 		
 		return mav;
 	}
@@ -92,10 +92,11 @@ public class BinderController {
 		ModelAndView mav = new ModelAndView("unbind");
 		
 		SingleIdentity chosen = identityService.getSingleBySubjectIssuer(subject, issuer);
-		if( chosen != null )
+		if( chosen != null ) {
 			mav.addObject("account", chosen);
-		else
+		} else {
 			mav = new ModelAndView("redirect:accounts");
+		}
 		
 		return mav;
 	}
