@@ -13,7 +13,7 @@
 									<small class="text-muted" th:if="${ u } and ${ u.preferredUsername }">([[ ${ u.preferredUsername } ]])</small>
 								</h3>
 								<h4 th:if="${ u } and ${ u.email }" th:text="${ u.email }">someone@emailaddress.com</h4>
-								<h5 class="text-muted">[[ ${ account.subject + " @ " + account.issuer } ]]</h5>
+								<h5 class="text-muted">[[ ${ account.issuer } ]]</h5>
 				</div>
 				<!-- end page content -->
 
