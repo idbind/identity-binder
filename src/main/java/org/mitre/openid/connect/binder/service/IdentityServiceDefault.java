@@ -15,6 +15,8 @@ import org.mitre.openid.connect.binder.model.MultipleIdentity;
 import org.mitre.openid.connect.binder.repository.SingleIdentityRepository;
 import org.mitre.openid.connect.binder.repository.MultipleIdentityRepository;
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,6 +37,8 @@ public class IdentityServiceDefault implements IdentityService {
 
 	@Autowired
 	private MultipleIdentityRepository multipleIdentityRepository;
+	
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	/**
 	 * This bind also binds any identities that were previously binded to the actively logged in identities.
@@ -59,6 +63,8 @@ public class IdentityServiceDefault implements IdentityService {
 			identities.add(singleIdentity);
 		}
 		multipleIdentity.setIdentities(identities);
+		
+		log.debug("Identities bound");
 		
 		return saveMultipleIdentity(multipleIdentity);
 	}
