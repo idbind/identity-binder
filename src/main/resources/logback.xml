@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+  
+  <!-- STDOUT logging -->
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <!-- Log message format -->
     <encoder>
       <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
     </encoder>
   </appender>
-
-  <!-- Setting the root level of logging to INFO -->
   <root level="info">
     <appender-ref ref="STDOUT" />
   </root>
+  
+  <!-- File logging -->
+  <!-- <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  	<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+  		 daily rollover
+  		<fileNamePattern>c:/temp/idbsLog_%d{yyyy-MM-dd}.log</fileNamePattern>
+  		
+  		 keep 30 days of log history
+  		<maxHistory>30</maxHistory>
+  	</rollingPolicy>
+  	
+  	<encoder>
+  		<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+  	</encoder>
+  </appender>
+  <root level="info">
+    <appender-ref ref="FILE" />
+  </root> -->
+  
 </configuration>
