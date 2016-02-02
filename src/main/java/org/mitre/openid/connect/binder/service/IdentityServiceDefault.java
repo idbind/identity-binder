@@ -64,7 +64,7 @@ public class IdentityServiceDefault implements IdentityService {
 		}
 		multipleIdentity.setIdentities(identities);
 		
-		log.debug("Identities bound");
+		log.info("Identities bound successfully");
 		
 		return saveMultipleIdentity(multipleIdentity);
 	}
@@ -72,6 +72,7 @@ public class IdentityServiceDefault implements IdentityService {
 	@Override
 	public MultipleIdentity unbind(MultipleIdentity multipleIdentity, SingleIdentity singleIdentity) {
 		if (multipleIdentity == null || multipleIdentity.getIdentities() == null || multipleIdentity.getIdentities().isEmpty()) {
+			log.info("Unbind failed: no bound identities");
 			return multipleIdentity;
 		}
 		
@@ -80,6 +81,8 @@ public class IdentityServiceDefault implements IdentityService {
 		multipleIdentity.setIdentities(identities);
 		
 		singleIdentityRepository.delete(singleIdentity);
+		
+		log.info("Identity '"+singleIdentity.getSubject()+"' unbound successfully");
 
 		return multipleIdentityRepository.save(multipleIdentity);
 	}
@@ -93,6 +96,7 @@ public class IdentityServiceDefault implements IdentityService {
 	@Override
 	public SingleIdentity getSingleBySubjectIssuer(String subject, String issuer) {
 		return singleIdentityRepository.findBySubjectAndIssuer(subject, issuer);
+		
 	}
 
 	@Override
@@ -101,6 +105,7 @@ public class IdentityServiceDefault implements IdentityService {
 
 		SingleIdentity single = getSingleBySubjectIssuer(subject, issuer);
 		if (single == null) {
+			log.info("Failed to get MultipleIdentity: no SingleIdentity exists with given subject and issuer");
 			return null;
 		}
 
@@ -221,11 +226,16 @@ public class IdentityServiceDefault implements IdentityService {
 			tokens = Sets.newHashSet(getCurrentTokens());
 			tokens.remove(getNewToken());
 		} catch (AuthenticationNotSupportedException e) {
-			// TODO Auto-generated catch block
+			
+			// TODO: remove?
 			e.printStackTrace();
+			
+			log.error("Failed to get preexisting MultipleIdentity: authentication not supported");
+			log.debug("Failed to get preexisting MultipleIdentity", e);
 		}
 		
 		if (tokens.isEmpty()) {
+			log.info("No preexisting MultipleIdentity.");
 			return null;
 		} else {
 			OIDCAuthenticationToken token = Iterables.getFirst(tokens, null);
@@ -243,8 +253,12 @@ public class IdentityServiceDefault implements IdentityService {
 		try {
 			token = getNewToken();
 		} catch (AuthenticationNotSupportedException e) {
-			// TODO Auto-generated catch block
+			
+			// TODO: remove?
 			e.printStackTrace();
+			
+			log.error("Failed to get new MultipleIdentity: authentication not supported");
+			log.debug("Failed to get new MultipleIdentity", e);
 		}
 		
 		return token == null ? null : getMultipleBySubjectIssuer(token.getSub(), token.getIssuer());
@@ -281,8 +295,14 @@ public class IdentityServiceDefault implements IdentityService {
 					newMultipleIdentity = unbind(multipleIdentity, single);
 				}
 				
-			} // else TODO error if something went wrong?
-		} // else TODO error if something went wrong?
+			} else {
+				log.error("Unbind all failed: invalid authentication");
+			}
+		} else {
+			log.error("Unbind all failed: invalid MultipleIdentity");
+		}
+		
+		log.info("All identities unbound successfully");
 		
 		return newMultipleIdentity;
 	}

@@ -15,7 +15,7 @@
   <!-- <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
   	<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
   		 daily rollover
-  		<fileNamePattern>c:/temp/idbsLog_%d{yyyy-MM-dd}.log</fileNamePattern>
+  		<fileNamePattern>[[**** PUT FILE PATH HERE ****]]idbsLog_%d{yyyy-MM-dd}.log</fileNamePattern>
   		
   		 keep 30 days of log history
   		<maxHistory>30</maxHistory>
