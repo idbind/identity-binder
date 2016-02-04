@@ -105,5 +105,17 @@ public class MultipleIdentity {
 			return false;
 		return true;
 	}
+	
+	@Override
+	public String toString() {
+		String identitiesString = "{";
+		for (SingleIdentity identity : identities) {
+			identitiesString += " " + identity.toString();
+		}
+		
+		identitiesString += "}";
+		
+		return identitiesString;
+	}
 
 }

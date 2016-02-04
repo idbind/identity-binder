@@ -69,12 +69,7 @@ public class IdentityServiceDefault implements IdentityService {
 		
 		multipleIdentity.setIdentities(identities);
 		
-		String identitiesString = "";
-		for (SingleIdentity identity : identities) {
-			identitiesString += " " + identity.toString();
-		}
-		
-		log.info("Following identities bound successfully: " + identitiesString);
+		log.info("Following identities bound successfully: " + multipleIdentity + ".");
 		
 		return saveMultipleIdentity(multipleIdentity);
 	}
@@ -92,7 +87,7 @@ public class IdentityServiceDefault implements IdentityService {
 		
 		singleIdentityRepository.delete(singleIdentity);
 		
-		log.info("Identity '"+singleIdentity.getSubject()+"' unbound successfully");
+		log.info("Identity "+ singleIdentity + " unbound successfully from " + multipleIdentity + ".");
 
 		return multipleIdentityRepository.save(multipleIdentity);
 	}
@@ -115,7 +110,7 @@ public class IdentityServiceDefault implements IdentityService {
 
 		SingleIdentity single = getSingleBySubjectIssuer(subject, issuer);
 		if (single == null) {
-			log.info("Failed to get MultipleIdentity: no SingleIdentity exists with given subject and issuer");
+			log.info("Unknown subject: " + subject + " and issuer: " + issuer + ".");
 			return null;
 		}
 
@@ -237,9 +232,6 @@ public class IdentityServiceDefault implements IdentityService {
 			tokens.remove(getNewToken());
 		} catch (AuthenticationNotSupportedException e) {
 			
-			// TODO: remove?
-			e.printStackTrace();
-			
 			log.error("Failed to get preexisting MultipleIdentity: authentication not supported");
 			log.debug("Failed to get preexisting MultipleIdentity", e);
 		}
@@ -263,9 +255,6 @@ public class IdentityServiceDefault implements IdentityService {
 		try {
 			token = getNewToken();
 		} catch (AuthenticationNotSupportedException e) {
-			
-			// TODO: remove?
-			e.printStackTrace();
 			
 			log.error("Failed to get new MultipleIdentity: authentication not supported");
 			log.debug("Failed to get new MultipleIdentity", e);
@@ -298,7 +287,9 @@ public class IdentityServiceDefault implements IdentityService {
 				for (SingleIdentity single : multipleIdentity.getIdentities()) {
 					if( !multiAuth.containsIssSubPair(single.getIssuer(), single.getSubject()) ) {
 						singleIdentitiesToBeRemoved.add(single);
-					} // else TODO error or notice if accounts were logged in so couldnt be unbound?
+					} else { // else TODO error or notice if accounts were logged in so couldnt be unbound?
+						log.warn("Identity " + single + " is currently logged in and cannot be unbound." );
+					}
 				}
 				
 				for (SingleIdentity single : singleIdentitiesToBeRemoved) {
@@ -306,13 +297,13 @@ public class IdentityServiceDefault implements IdentityService {
 				}
 				
 			} else {
-				log.error("Unbind all failed: invalid authentication");
+				log.error("Unbind failed: invalid authentication");
 			}
 		} else {
-			log.error("Unbind all failed: invalid MultipleIdentity");
+			log.error("Unbind failed: invalid MultipleIdentity");
 		}
 		
-		log.info("All identities unbound successfully");
+		log.info("Unbind-all operation completed");
 		
 		return newMultipleIdentity;
 	}
