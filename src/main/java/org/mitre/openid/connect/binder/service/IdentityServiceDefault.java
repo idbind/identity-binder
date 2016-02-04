@@ -47,24 +47,34 @@ public class IdentityServiceDefault implements IdentityService {
 	public MultipleIdentity bind() throws AuthenticationNotSupportedException {
 
 		MultipleIdentity multipleIdentity = new MultipleIdentity();
-		Set<SingleIdentity> identities = new HashSet<SingleIdentity>();
+		Set<SingleIdentity> tempIdentities = new HashSet<SingleIdentity>();
 		for (OIDCAuthenticationToken token : getCurrentTokens()) {
 			
 			// find and bind previously binded identities and delete old multiple identity
 			MultipleIdentity oldMultiple = getMultipleBySubjectIssuer(token.getSub(), token.getIssuer());
 			if (oldMultiple != null) {
-				identities.addAll(oldMultiple.getIdentities());
+				tempIdentities.addAll(oldMultiple.getIdentities());
 				multipleIdentityRepository.delete(oldMultiple);
 			}
 			
 			SingleIdentity singleIdentity = convertTokenIdentity(token);
 			
 			// add to new one
-			identities.add(singleIdentity);
+			tempIdentities.add(singleIdentity);
 		}
+		
+		// re-'set' the set :P
+		Set<SingleIdentity> identities = new HashSet<SingleIdentity>();
+		identities.addAll(tempIdentities);
+		
 		multipleIdentity.setIdentities(identities);
 		
-		log.info("Identities bound successfully");
+		String identitiesString = "";
+		for (SingleIdentity identity : identities) {
+			identitiesString += " " + identity.toString();
+		}
+		
+		log.info("Following identities bound successfully: " + identitiesString);
 		
 		return saveMultipleIdentity(multipleIdentity);
 	}
