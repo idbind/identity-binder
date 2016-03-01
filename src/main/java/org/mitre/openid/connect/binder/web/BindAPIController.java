@@ -18,7 +18,7 @@ public class BindAPIController {
 	private IdentityService identityService;
 	
 	@PreAuthorize("#oauth2.hasScope('org.mitre.idbind.bind')")
-	@RequestMapping(value = "/api-bind", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/bind", method = RequestMethod.POST)
 	public void bind() {
 		
 		try {
@@ -30,7 +30,7 @@ public class BindAPIController {
 	}
 	
 	@PreAuthorize("#oauth2.hasScope('org.mitre.idbind.unbind')")
-	@RequestMapping(value = "/api-unbind", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded")
+	@RequestMapping(value = "/api/unbind", method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded")
 	public void unbind(@RequestParam("issuer") String issuer, @RequestParam("subject") String subject) {
 		
 		MultipleIdentity multiple = identityService.getMultipleBySubjectIssuer(subject, issuer);
@@ -40,5 +40,14 @@ public class BindAPIController {
 		//TODO: else error?
 	}
 	
-	//TODO: endpoint for unbindAll?
+	//TODO: change scope?
+	@PreAuthorize("#oauth2.hasScope('org.mitre.idbind.unbind')")
+	@RequestMapping(value = "/api/unbind-all", method = RequestMethod.POST)
+	public void unbindAll() {
+		
+		MultipleIdentity multiple = identityService.getCurrentMultiple();
+		if(multiple != null) {
+			identityService.unbindAll(multiple);
+		}
+	}
 }
