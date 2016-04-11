@@ -1,5 +1,7 @@
 package org.mitre.openid.connect.binder.web;
 
+import java.util.Set;
+
 import javax.naming.AuthenticationNotSupportedException;
 
 import org.mitre.openid.connect.binder.model.MultipleIdentity;
@@ -19,16 +21,11 @@ public class BindAPIController {
 	@Autowired
 	private IdentityService identityService;
 	
-	//@PreAuthorize("#oauth2.hasScope('org.mitre.idbind.bind')")
+	@PreAuthorize("#oauth2.hasScope('org.mitre.idbind.bind')")
 	@RequestMapping(value = "/api/bind", method = RequestMethod.POST, consumes = "application/json")
-	public void bind() {
+	public void bind(@RequestBody Set<SingleIdentity> identities) {
 		
-		try {
-			identityService.bind();
-		}
-		catch(AuthenticationNotSupportedException e) {
-			e.printStackTrace();
-		}
+		identityService.bind(identities);
 	}
 	
 	@PreAuthorize("#oauth2.hasScope('org.mitre.idbind.unbind')")
@@ -48,11 +45,17 @@ public class BindAPIController {
 		//TODO: else error?
 	}
 	
-	//@PreAuthorize("#oauth2.hasScope('org.mitre.idbind.unbind')")
-	@RequestMapping(value = "/api/unbind-all", method = RequestMethod.POST)
-	public void unbindAll() {
+	@PreAuthorize("#oauth2.hasScope('org.mitre.idbind.unbind')")
+	@RequestMapping(value = "/api/unbind-all", method = RequestMethod.POST, consumes = "application/json")
+	public void unbindAll(@RequestBody SingleIdentity temp) {
 		
-		MultipleIdentity multiple = identityService.getCurrentMultiple();
+		SingleIdentity single = identityService.getSingleBySubjectIssuer(temp.getSubject(), temp.getIssuer());
+		if(single == null) {
+			//TODO: error?
+			return;
+		}
+		
+		MultipleIdentity multiple = identityService.getMultipleBySubjectIssuer(temp.getSubject(), temp.getIssuer());
 		if(multiple != null) {
 			identityService.unbindAll(multiple);
 		}

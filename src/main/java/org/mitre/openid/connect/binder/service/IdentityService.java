@@ -25,6 +25,15 @@ public interface IdentityService {
 	public MultipleIdentity bind() throws AuthenticationNotSupportedException;
 	
 	/**
+	 * Binds a set of identities into a single new set of identities.
+	 * This operation is independent of the current security context.
+	 * 
+	 * @param identities
+	 * @return
+	 */
+	public MultipleIdentity bind(Set<SingleIdentity> identities);
+	
+	/**
 	 * Unbinds the given single identity from the given multiple identity object. Does nothing if the multiple
 	 * identity object is null, or if the single identity is not found in it.
 	 * 

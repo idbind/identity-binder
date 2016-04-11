@@ -50,7 +50,7 @@ public class OAuthProtectedResourceConfiguration extends ResourceServerConfigure
 	    		.accessDeniedHandler(oauth2AccessDeniedHandler())
 	    		;
 	    
-	    /*http.antMatcher("/api/bind")
+	    http.antMatcher("/api/bind")
 	    	.authorizeRequests()
 	    		.anyRequest()
 	    		.access("#oauth2.hasScope('org.mitre.idbind.bind')")
@@ -58,9 +58,9 @@ public class OAuthProtectedResourceConfiguration extends ResourceServerConfigure
 	    		.csrf().disable()
 	    		.exceptionHandling().authenticationEntryPoint(oauth2AuthenticationEntryPoint())
 	    		.accessDeniedHandler(oauth2AccessDeniedHandler())
-	    		;*/
+	    		;
 	    
-	    http.antMatcher("/api/unbind")
+	    /*http.antMatcher("/api/unbind")
     		.authorizeRequests()
     			.anyRequest()
     			.access("#oauth2.hasScope('org.mitre.idbind.unbind')")
@@ -69,6 +69,16 @@ public class OAuthProtectedResourceConfiguration extends ResourceServerConfigure
     			.exceptionHandling().authenticationEntryPoint(oauth2AuthenticationEntryPoint())
     			.accessDeniedHandler(oauth2AccessDeniedHandler())
     			;
+	    
+	    http.antMatcher("/api/unbind-all")
+			.authorizeRequests()
+				.anyRequest()
+				.access("#oauth2.hasScope('org.mitre.idbind.unbind')")
+			.and()
+				.csrf().disable()
+				.exceptionHandling().authenticationEntryPoint(oauth2AuthenticationEntryPoint())
+				.accessDeniedHandler(oauth2AccessDeniedHandler())
+				;*/
 	}
 	
 	@Bean
