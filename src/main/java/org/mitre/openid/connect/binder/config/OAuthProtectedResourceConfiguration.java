@@ -34,13 +34,20 @@ public class OAuthProtectedResourceConfiguration extends ResourceServerConfigure
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-	    /*http.authorizeRequests()
+	    http.authorizeRequests()
 	    	.antMatchers("/query**")
 	    		.access("#oauth2.hasScope('org.mitre.idbind.query')")
+	    	.antMatchers("/api/bind")
+	    		.access("#oauth2.hasScope('org.mitre.idbind.bind')")
 	    	.antMatchers("/api/unbind**")
-	    		.access("#oauth2.hasScope('org.mitre.idbind.unbind')")*/
+	    		.access("#oauth2.hasScope('org.mitre.idbind.unbind')")
+	    	.and()
+	    		.csrf().disable()
+	    		.exceptionHandling().authenticationEntryPoint(oauth2AuthenticationEntryPoint())
+	    		.accessDeniedHandler(oauth2AccessDeniedHandler())
+	    		;
 		
-		http.antMatcher("/query**")
+		/*http.antMatcher("/query**")
 	    	.authorizeRequests()
 	    		.anyRequest()
 	    		.access("#oauth2.hasScope('org.mitre.idbind.query')")
@@ -48,37 +55,7 @@ public class OAuthProtectedResourceConfiguration extends ResourceServerConfigure
 	    		.csrf().disable()
 	    		.exceptionHandling().authenticationEntryPoint(oauth2AuthenticationEntryPoint())
 	    		.accessDeniedHandler(oauth2AccessDeniedHandler())
-	    		;
-	    
-	    http.antMatcher("/api/bind")
-	    	.authorizeRequests()
-	    		.anyRequest()
-	    		.access("#oauth2.hasScope('org.mitre.idbind.bind')")
-	    	.and()
-	    		.csrf().disable()
-	    		.exceptionHandling().authenticationEntryPoint(oauth2AuthenticationEntryPoint())
-	    		.accessDeniedHandler(oauth2AccessDeniedHandler())
-	    		;
-	    
-	    /*http.antMatcher("/api/unbind")
-    		.authorizeRequests()
-    			.anyRequest()
-    			.access("#oauth2.hasScope('org.mitre.idbind.unbind')")
-    		.and()
-    			.csrf().disable()
-    			.exceptionHandling().authenticationEntryPoint(oauth2AuthenticationEntryPoint())
-    			.accessDeniedHandler(oauth2AccessDeniedHandler())
-    			;
-	    
-	    http.antMatcher("/api/unbind-all")
-			.authorizeRequests()
-				.anyRequest()
-				.access("#oauth2.hasScope('org.mitre.idbind.unbind')")
-			.and()
-				.csrf().disable()
-				.exceptionHandling().authenticationEntryPoint(oauth2AuthenticationEntryPoint())
-				.accessDeniedHandler(oauth2AccessDeniedHandler())
-				;*/
+	    		;*/
 	}
 	
 	@Bean

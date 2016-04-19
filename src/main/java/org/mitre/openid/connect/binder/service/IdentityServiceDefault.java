@@ -77,15 +77,23 @@ public class IdentityServiceDefault implements IdentityService {
 	@Override
 	public MultipleIdentity bind(Set<SingleIdentity> identities) {
 		
+		Set<SingleIdentity> newIdentities = new HashSet<SingleIdentity>();
+		
 		for(SingleIdentity single : identities) {
-			if(getSingleBySubjectIssuer(single.getSubject(), single.getIssuer()) == null) {
+			// Get the existing SingleIdentity from the subject/issuer since the one passed as a parameter
+			//  may not have the full information
+			SingleIdentity existingSingle = getSingleBySubjectIssuer(single.getSubject(), single.getIssuer());
+			if(existingSingle == null) {
 				log.error("Bind failed: identity " + single + " does not exist.");
 				return null;
+			}
+			else {
+				newIdentities.add(existingSingle);
 			}
 		}
 		
 		MultipleIdentity multiple = new MultipleIdentity();
-		multiple.setIdentities(identities);
+		multiple.setIdentities(newIdentities);
 		
 		log.info("Following identities bound successfully: " + multiple + ".");
 		
