@@ -88,7 +88,15 @@ public class IdentityServiceDefault implements IdentityService {
 				return null;
 			}
 			else {
-				newIdentities.add(existingSingle);
+				// Check if this SingleIdentity is already part of a MultipleIdentity;
+				//  if it is, lump together all of its bound identities
+				MultipleIdentity existingMultiple = getMultipleBySubjectIssuer(existingSingle.getSubject(), existingSingle.getIssuer());
+				if(existingMultiple != null && existingMultiple.getIdentities() != null) {
+					newIdentities.addAll(existingMultiple.getIdentities());
+				}
+				else {
+					newIdentities.add(existingSingle);
+				}
 			}
 		}
 		
