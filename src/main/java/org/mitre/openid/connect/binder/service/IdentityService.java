@@ -135,4 +135,11 @@ public interface IdentityService {
  * @return The multipleIdentity object with remaining identities that were not unbound.
  */
 	public MultipleIdentity unbindAll(MultipleIdentity multipleIdentity);
+	
+	/**
+	 * Unbinds all identities bound to the given singleIdentity, independent of security context.
+	 * @param singleIdentity
+	 * @return
+	 */
+	public MultipleIdentity unbindAll(SingleIdentity singleIdentity);
 }

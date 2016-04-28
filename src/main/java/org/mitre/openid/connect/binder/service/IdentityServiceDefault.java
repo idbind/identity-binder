@@ -103,7 +103,7 @@ public class IdentityServiceDefault implements IdentityService {
 	@Override
 	public MultipleIdentity unbind(MultipleIdentity multipleIdentity, SingleIdentity singleIdentity) {
 		if (multipleIdentity == null || multipleIdentity.getIdentities() == null || multipleIdentity.getIdentities().isEmpty()) {
-			log.info("Unbind failed: no bound identities");
+			log.info("Unbind failed: no identities bound to " + singleIdentity + ".");
 			return multipleIdentity;
 		}
 		
@@ -332,6 +332,36 @@ public class IdentityServiceDefault implements IdentityService {
 		log.info("Unbind-all operation completed");
 		
 		return newMultipleIdentity;
+	}
+	
+	/*
+	 * Unbinds all identities bound to the given identity (security context independent)
+	 */
+	@Override
+	public MultipleIdentity unbindAll(SingleIdentity singleIdentity) {
+		
+		MultipleIdentity multiple = getMultipleBySubjectIssuer(singleIdentity.getSubject(), singleIdentity.getIssuer());
+		if(multiple == null || multiple.getIdentities() == null || multiple.getIdentities().isEmpty()) {
+			log.info("Unbind-all failed: no other identities bound to " + singleIdentity + ".");
+			return multiple;
+		}
+		
+		Set<SingleIdentity> singlesToBeRemoved = new HashSet<SingleIdentity>();
+		MultipleIdentity newMultiple = multiple;
+		
+		//SingleIdentity existingSingle = getSingleBySubjectIssuer(singleIdentity.getSubject(), singleIdentity.getIssuer());
+		for (SingleIdentity single : multiple.getIdentities()) {
+			if(!single.equals(singleIdentity)) {
+				singlesToBeRemoved.add(single);
+			}
+		}
+		
+		for(SingleIdentity single : singlesToBeRemoved) {
+			newMultiple = unbind(multiple, single);
+		}
+		
+		log.info("Unbind-all operation completed");
+		return newMultiple;
 	}
 
 }

@@ -55,9 +55,6 @@ public class BindAPIController {
 			return;
 		}
 		
-		MultipleIdentity multiple = identityService.getMultipleBySubjectIssuer(temp.getSubject(), temp.getIssuer());
-		if(multiple != null) {
-			identityService.unbindAll(multiple);
-		}
+		identityService.unbindAll(single);
 	}
 }
